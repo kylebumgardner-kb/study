@@ -470,5 +470,147 @@ const QUESTIONS = [
       "Always two correct answers",
       "At most one correct answer"],
     answer:1,
-    why:"Several or none. Evaluate every option independently as its own true/false — don't stop at the first one that looks right." }
+    why:"Several or none. Evaluate every option independently as its own true/false — don't stop at the first one that looks right." },
+
+  // ---------- SOIL DRILLS (added 9/30) ----------
+
+  { id:"s7", concept:"sitemath", type:"num",
+    q:"A 6-acre site needs 6 INCHES of topsoil stripped across the whole thing. How many cubic yards?",
+    answer:4839, tolerance:0,
+    hint:"6 inches = 0.5 ft. Multiply acres × depth first — it often simplifies.",
+    why:"6 × 0.5 = 3 acre-feet. 1,613 × 3 = 4,839 cu yd." },
+
+  { id:"s8", concept:"sitemath", type:"num",
+    q:"2.5 acres of soft soil at 4 feet deep. How many cubic yards?",
+    answer:16130, tolerance:0,
+    hint:"2.5 × 4 gives a clean number. Then × 1,613.",
+    why:"2.5 × 4 = 10 acre-feet. 1,613 × 10 = 16,130 cu yd — just move the decimal." },
+
+  { id:"s9", concept:"sitemath", type:"num",
+    q:"A 10-acre parcel needs 2 ft removed from exactly HALF its area. How many cubic yards?",
+    answer:16130, tolerance:0,
+    hint:"Find the affected acreage first, then apply depth.",
+    why:"Half of 10 = 5 acres. 5 × 2 = 10 acre-feet. 1,613 × 10 = 16,130 cu yd." },
+
+  { id:"s10", concept:"sitemath", type:"num",
+    q:"An area measuring 300 ft × 200 ft must be dug 3 ft deep. How many cubic yards? (Round to the nearest whole yard.)",
+    answer:6667, tolerance:2,
+    hint:"You're starting in FEET, not acres. Do NOT use 1,613. Multiply to cubic feet, then divide by 27.",
+    why:"300 × 200 = 60,000 sq ft. × 3 = 180,000 cu ft. ÷ 27 = 6,666.7 → 6,667 cu yd. Using 1,613 here would be wrong by a factor of 43,560 — 1,613 only works when you START from acres." },
+
+  { id:"s11", concept:"sitemath", type:"num",
+    q:"A detention pond is 200 ft × 90 ft and averages 6 ft deep. How many cubic yards of excavation?",
+    answer:4000, tolerance:0,
+    hint:"Dimensions in feet → cubic feet → ÷ 27.",
+    why:"200 × 90 = 18,000 sq ft. × 6 = 108,000 cu ft. ÷ 27 = 4,000 exactly. (27 × 4 = 108, so 27 × 4,000 = 108,000.)" },
+
+  { id:"s12", concept:"sitemath", type:"num",
+    q:"You must remove 3 acres at 2 ft AND import 3 acres at 2 ft of structural fill. Removal costs $10/cu yd, import costs $14/cu yd. What is the total dirt cost in dollars?",
+    answer:232272, tolerance:0,
+    hint:"Each side is 6 acre-feet. Price them separately, then add.",
+    why:"6 acre-ft × 1,613 = 9,678 cu yd each way. Removal: 9,678 × 10 = $96,780. Import: 9,678 × 14 = $135,492. Total $232,272. This is the balanced-site argument in dollars — unbalanced, you pay twice for the same volume of dirt." },
+
+  { id:"s13", concept:"sitemath", type:"num",
+    q:"Your dirt budget is $100,000 and the hauler charges $11 per cubic yard. Roughly how many cubic yards can you afford? (Round DOWN to the nearest whole yard.)",
+    answer:9090, tolerance:1,
+    hint:"Divide. On a budget question, round down — you can't overspend.",
+    why:"100,000 ÷ 11 = 9,090.9 → 9,090 cu yd. (11 × 9,000 = 99,000; 11 × 90 = 990.)" },
+
+  { id:"s14", concept:"units", type:"num",
+    q:"A trench holds 540 cubic feet of dirt. How many cubic yards is that?",
+    answer:20, tolerance:0,
+    hint:"Divide by 27.",
+    why:"540 ÷ 27 = 20 cu yd exactly." },
+
+  // ---------- WETLAND NEAR-MISS (added 9/30) ----------
+
+  { id:"w11", concept:"wetland", type:"mc",
+    q:"You pace an isolated wetland at 95 ft × 88 ft. Is it over or under the 0.2-acre jurisdictional threshold?",
+    choices:[
+      "Over — it exceeds 8,712 sq ft",
+      "Under — it is below 8,712 sq ft",
+      "Exactly at the threshold",
+      "You cannot tell without knowing the depth"],
+    answer:1,
+    why:"95 × 88 = 8,360 sq ft, which is UNDER 8,712 — about 0.192 acres. This one is dangerous: rounding to 100 × 90 gives 9,000 and says 'over,' which is backwards. When he hands you exact dimensions, multiply them out — (95×80) + (95×8) = 7,600 + 760 = 8,360." },
+
+  { id:"w12", concept:"wetland", type:"mc",
+    q:"A wetland measures 60 ft × 70 ft and drains into a creek at the property line. Is it jurisdictional?",
+    choices:[
+      "No — 4,200 sq ft is well under the 0.2-acre limit",
+      "Yes — it is connected to other waters, so size does not matter",
+      "Only if the creek is navigable",
+      "No — creeks are exempt from wetland rules"],
+    answer:1,
+    why:"Connected wetlands are jurisdictional at ANY size. The 0.2-acre threshold only applies to ISOLATED wetlands. Check connectivity BEFORE you check size, every time — otherwise you do the arithmetic perfectly and answer the wrong question." },
+
+  // ---------- PARKING DRILLS (added 9/30) ----------
+
+  { id:"p10", concept:"parking", type:"num",
+    q:"A lot is 270 ft long × 190 ft deep. Stalls 9 ft wide, 18 ft deep; aisles 24 ft. No additional parking. How many spaces?",
+    answer:180, tolerance:0,
+    hint:"270 ÷ 9 is clean. Then how many full 60 ft bays fit in 190 ft?",
+    why:"270 ÷ 9 = 30 per row. 190 ÷ 60 = 3.16 → 3 bays → 6 rows. 30 × 6 = 180 spaces." },
+
+  { id:"p11", concept:"parking", type:"num",
+    q:"A lot is 315 ft long × 240 ft deep, plus an additional end row of 11 spaces. Stalls 9 ft wide, 18 ft deep; aisles 24 ft. How many total spaces?",
+    answer:291, tolerance:0,
+    hint:"240 ÷ 60 comes out even. Don't forget the extra row at the end.",
+    why:"315 ÷ 9 = 35 per row. 240 ÷ 60 = 4 bays → 8 rows. 35 × 8 = 280, plus 11 = 291 spaces." },
+
+  { id:"p12", concept:"parking", type:"num",
+    q:"A lot is 400 ft long × 121 ft deep. Stalls 9 ft wide, 18 ft deep; aisles 24 ft. How many spaces?",
+    answer:176, tolerance:0,
+    hint:"121 ft is bait. How many COMPLETE 60 ft bays actually fit?",
+    why:"400 ÷ 9 = 44.4 → 44 per row. 121 ÷ 60 = 2.016 → 2 bays → 4 rows. 44 × 4 = 176. The extra foot buys you nothing — a third bay needs 180 ft." },
+
+  { id:"p13", concept:"parking", type:"num",
+    q:"A lot is 96 ft long × 130 ft deep. Stalls 9 ft wide, 18 ft deep; aisles 24 ft. How many spaces?",
+    answer:40, tolerance:0,
+    hint:"96 ÷ 9 is not a whole number. An 11th stall would need 99 ft.",
+    why:"96 ÷ 9 = 10.67 → 10 per row (not 11). 130 ÷ 60 = 2.16 → 2 bays → 4 rows. 10 × 4 = 40 spaces." },
+
+  { id:"p14", concept:"parking", type:"num",
+    q:"Stalls are 18 ft deep and the drive aisle is 24 ft. How deep is a SINGLE-loaded bay, in feet?",
+    answer:42, tolerance:0,
+    hint:"Single-loaded means parking on only one side of the aisle.",
+    why:"18 + 24 = 42 ft, holding 1 row. It's less efficient — same 24 ft of asphalt aisle, half the cars — so developers avoid it unless the site shape forces it." },
+
+  { id:"p15", concept:"parking", type:"num",
+    q:"An 88-space lot charges $4/day and runs at 80% occupancy. What is the daily revenue in dollars?",
+    answer:280, tolerance:0,
+    hint:"Find occupied spaces first, and round that DOWN — partial cars don't pay.",
+    why:"88 × 0.80 = 70.4 → 70 occupied. 70 × $4 = $280/day." },
+
+  { id:"p16", concept:"parking", type:"num",
+    q:"An 86-space lot charges $120/month per space and stays 90% leased. What is the monthly revenue in dollars?",
+    answer:9240, tolerance:0,
+    hint:"86 × 0.90, rounded down. Then × 120 — break it into ×100 and ×20.",
+    why:"86 × 0.90 = 77.4 → 77 leased. 77 × 120 = 7,700 + 1,540 = $9,240." },
+
+  { id:"p17", concept:"parking", type:"num",
+    q:"You need $200,000/year from a lot charging $6/day, operating 250 days, at 80% occupancy. How many SPACES do you need?",
+    answer:168, tolerance:1,
+    hint:"Revenue per occupied space per year first. Then work back through the occupancy rate. Careful which way you round.",
+    why:"$6 × 250 = $1,500 per occupied space per year. 200,000 ÷ 1,500 = 133.3 → 134 occupied needed. 134 ÷ 0.8 = 167.5 → 168 spaces. Round UP here — this asks how many you NEED, not how many FIT. Building 167 leaves you short of the target." },
+
+  { id:"p18", concept:"parking", type:"multi",
+    q:"A site is 200 ft deep and one more bay would require 240 ft. Which of these could get more spaces without acquiring more land?",
+    choices:[
+      "Add a single-loaded bay along the edge (42 ft instead of 60)",
+      "Use angled parking, which narrows the required aisle",
+      "Add perpendicular end parking at the short ends of the lot",
+      "Build a parking deck"],
+    answers:[0,1,2,3],
+    why:"All four work. The first and third are the cheap answers and the ones his diagram hints at — he drew 'additional parking' at one end. A deck multiplies spaces on the same footprint but at far higher cost." },
+
+  { id:"p19", concept:"parking", type:"mc",
+    q:"A lot is 150 ft long × 58 ft deep. Using 60 ft double-loaded bays, how many spaces fit?",
+    choices:[
+      "16 spaces — one full row",
+      "0 spaces — no complete bay fits",
+      "32 spaces — one bay, two rows",
+      "8 spaces"],
+    answer:1,
+    why:"58 ÷ 60 = 0.97 → 0 bays. Two feet short of a single double-loaded bay. If you rounded 0.97 up to 1 you got this wrong — that's exactly the instinct being tested. In practice you'd go single-loaded (42 ft) and get one row of 16, but with double-loaded bays the answer is zero." }
 ];
