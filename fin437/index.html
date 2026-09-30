@@ -27,9 +27,13 @@
     padding:6px 0 14px; border-bottom:1px solid var(--line); margin-bottom:16px; flex-wrap:wrap; gap:8px; }
   h1 { font-size:17px; margin:0; font-weight:650; letter-spacing:-.2px; }
   .brand { display:flex; align-items:center; gap:11px; }
+  /* The Terrier Head is predominantly black, so it needs a light field to read
+     against the black page. Chip is a plain background — the mark itself is unaltered. */
+  .chip { flex:none; display:flex; align-items:center; justify-content:center;
+    background:var(--text); border-radius:10px; padding:5px 7px; }
   .mark { flex:none; display:block; }
-  .signoff { text-align:center; margin-top:34px; opacity:.9; }
-  .signoff img { display:block; margin:0 auto 7px; }
+  .signoff { text-align:center; margin-top:34px; }
+  .signoff .chip { display:inline-flex; margin:0 auto 9px; padding:9px 12px; border-radius:14px; }
   .signoff-t { font-size:12px; font-weight:700; letter-spacing:1.6px;
     text-transform:uppercase; color:var(--accent); }
   footer.colophon { margin-top:22px; padding-top:14px; border-top:1px solid var(--line);
@@ -127,7 +131,7 @@
 
   <header>
     <div class="brand">
-      <img src="terrier-logo.png" alt="Wofford Terriers" class="mark" width="38" height="42">
+      <span class="chip"><img src="terrier-logo.png" alt="Wofford Terriers" class="mark" width="34" height="38"></span>
       <div>
         <h1>FIN 437 — Exam 1 Trainer</h1>
         <div class="sub">Real Estate Development · adaptive practice</div>
@@ -167,7 +171,7 @@
     </div>
   </div>
   <div class="signoff">
-    <img src="terrier-logo.png" alt="Wofford Terriers" width="58" height="64">
+    <span class="chip"><img src="terrier-logo.png" alt="Wofford Terriers" width="58" height="64"></span>
     <div class="signoff-t">Go Terriers</div>
   </div>
   <footer class="colophon">
