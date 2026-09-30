@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1a1a2e">
+<title>FIN 437 — Exam 1 Trainer</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  :root {
+    --bg:#12121c; --card:#1e1e2e; --card2:#26263a; --line:#33334d;
+    --text:#e9e9f2; --dim:#a0a0b8; --accent:#5b8dee; --good:#3ecf8e;
+    --bad:#ef5f6b; --warn:#f0a03c; --gold:#d4af37;
+  }
+  html,body { margin:0; padding:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    line-height:1.5; }
+  .wrap { max-width:720px; margin:0 auto; padding:16px 16px 60px; }
+
+  header { display:flex; align-items:center; justify-content:space-between;
+    padding:6px 0 14px; border-bottom:1px solid var(--line); margin-bottom:16px; flex-wrap:wrap; gap:8px; }
+  h1 { font-size:17px; margin:0; font-weight:650; letter-spacing:-.2px; }
+  .sub { font-size:12px; color:var(--dim); margin-top:2px; }
+  .days { font-size:12px; color:var(--warn); font-weight:600; }
+
+  .tabs { display:flex; gap:6px; margin-bottom:16px; }
+  .tab { flex:1; padding:9px 4px; text-align:center; font-size:13px; font-weight:600;
+    background:var(--card); border:1px solid var(--line); border-radius:8px;
+    cursor:pointer; color:var(--dim); user-select:none; }
+  .tab.on { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+  .card { background:var(--card); border:1px solid var(--line);
+    border-radius:12px; padding:18px; margin-bottom:14px; }
+
+  .ctag { display:inline-block; font-size:11px; font-weight:700; letter-spacing:.4px;
+    text-transform:uppercase; color:var(--accent); background:rgba(91,141,238,.12);
+    padding:3px 9px; border-radius:20px; margin-bottom:12px; }
+  .qtype { float:right; font-size:11px; color:var(--dim); font-weight:600;
+    text-transform:uppercase; letter-spacing:.4px; margin-top:4px; }
+  .q { font-size:16.5px; font-weight:550; margin:0 0 16px; line-height:1.45; }
+
+  .opt { display:flex; align-items:flex-start; gap:11px; padding:12px 14px;
+    background:var(--card2); border:1.5px solid var(--line); border-radius:9px;
+    margin-bottom:8px; cursor:pointer; font-size:15px; transition:border-color .12s, background .12s; }
+  .opt:hover:not(.locked) { border-color:var(--accent); }
+  .opt.sel { border-color:var(--accent); background:rgba(91,141,238,.13); }
+  .opt.right { border-color:var(--good); background:rgba(62,207,142,.14); }
+  .opt.wrong { border-color:var(--bad); background:rgba(239,95,107,.14); }
+  .opt.miss { border-color:var(--good); border-style:dashed; }
+  .box { flex:0 0 20px; height:20px; border:2px solid var(--dim); background:transparent;
+    margin-top:1px; display:flex; align-items:center; justify-content:center;
+    font-size:13px; font-weight:800; color:#fff; }
+  .box.sq { border-radius:4px; } .box.rd { border-radius:50%; }
+  .opt.sel .box { background:var(--accent); border-color:var(--accent); }
+  .opt.right .box { background:var(--good); border-color:var(--good); }
+  .opt.wrong .box { background:var(--bad); border-color:var(--bad); }
+
+  input[type=number] { width:100%; padding:13px 14px; font-size:19px; font-weight:600;
+    background:var(--card2); border:1.5px solid var(--line); border-radius:9px;
+    color:var(--text); font-family:inherit; }
+  input[type=number]:focus { outline:none; border-color:var(--accent); }
+  input.right { border-color:var(--good); } input.wrong { border-color:var(--bad); }
+
+  button { font-family:inherit; font-size:15px; font-weight:650; padding:13px 20px;
+    border-radius:9px; border:none; cursor:pointer; background:var(--accent); color:#fff; }
+  button:disabled { opacity:.4; cursor:default; }
+  button.ghost { background:var(--card2); color:var(--text); border:1px solid var(--line); }
+  button.wide { width:100%; margin-top:6px; }
+  .row { display:flex; gap:9px; margin-top:6px; }
+  .row button { flex:1; }
+
+  .fb { margin-top:14px; padding:14px 16px; border-radius:9px; font-size:14.5px; line-height:1.55; }
+  .fb.ok { background:rgba(62,207,142,.11); border-left:3px solid var(--good); }
+  .fb.no { background:rgba(239,95,107,.11); border-left:3px solid var(--bad); }
+  .fb b { display:block; margin-bottom:5px; font-size:15px; }
+  .fb.ok b { color:var(--good); } .fb.no b { color:var(--bad); }
+  .hint { margin-top:11px; font-size:13.5px; color:var(--warn);
+    background:rgba(240,160,60,.09); padding:10px 13px; border-radius:8px;
+    border-left:3px solid var(--warn); }
+
+  .bar { height:6px; background:var(--card2); border-radius:3px; overflow:hidden; margin:5px 0; }
+  .fill { height:100%; border-radius:3px; transition:width .35s ease; }
+
+  .mrow { display:flex; align-items:center; gap:11px; padding:11px 0;
+    border-bottom:1px solid var(--line); }
+  .mrow:last-child { border-bottom:none; }
+  .mrow .nm { flex:1; min-width:0; }
+  .mrow .nm .t { font-size:14.5px; font-weight:600; }
+  .mrow .nm .d { font-size:11.5px; color:var(--dim); margin-top:1px; }
+  .pct { font-size:13px; font-weight:700; min-width:58px; text-align:right; }
+
+  .stats { display:flex; gap:9px; margin-bottom:14px; }
+  .stat { flex:1; background:var(--card); border:1px solid var(--line);
+    border-radius:10px; padding:13px 8px; text-align:center; }
+  .stat .v { font-size:23px; font-weight:750; letter-spacing:-.5px; }
+  .stat .l { font-size:10.5px; color:var(--dim); text-transform:uppercase;
+    letter-spacing:.5px; margin-top:2px; }
+
+  .prog { font-size:12.5px; color:var(--dim); margin-bottom:11px; display:flex;
+    justify-content:space-between; }
+  .streak { color:var(--gold); font-weight:650; }
+  .empty { text-align:center; padding:34px 18px; color:var(--dim); font-size:14.5px; }
+  .mini { font-size:12.5px; color:var(--dim); margin-top:10px; line-height:1.5; }
+  a { color:var(--accent); }
+  .banner { background:linear-gradient(135deg,rgba(91,141,238,.16),rgba(62,207,142,.1));
+    border:1px solid var(--accent); border-radius:11px; padding:15px 17px; margin-bottom:15px; }
+  .banner .h { font-weight:700; font-size:15px; margin-bottom:4px; }
+  .banner .b { font-size:13.5px; color:var(--dim); line-height:1.5; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1>FIN 437 — Exam 1 Trainer</h1>
+      <div class="sub">Real Estate Development · adaptive practice</div>
+    </div>
+    <div class="days" id="days">Open in Safari to start</div>
+  </header>
+
+  <div class="tabs">
+    <div class="tab on" data-v="quiz">Practice</div>
+    <div class="tab" data-v="mastery">Mastery</div>
+    <div class="tab" data-v="ref">Formulas</div>
+  </div>
+
+  <div id="view">
+    <div class="card" id="nojs">
+      <div class="ctag">Almost there</div>
+      <p class="q">This preview can't run the quiz.</p>
+      <p style="font-size:15px;color:var(--dim);line-height:1.6;margin:0 0 14px">
+        You're viewing the file inside an app that blocks interactive content
+        (Discord, Messages, Mail and Google Drive all do this). Nothing is broken —
+        the quiz just needs a real browser.
+      </p>
+      <p style="font-size:15px;font-weight:650;margin:0 0 8px">On iPhone, do this:</p>
+      <ol style="font-size:15px;color:var(--dim);line-height:1.7;margin:0 0 14px 20px;padding:0">
+        <li>Tap the <b style="color:var(--text)">share icon</b> — the square with an
+            arrow pointing up.</li>
+        <li>Choose <b style="color:var(--text)">Save to Files</b> →
+            <b style="color:var(--text)">On My iPhone</b> → <b style="color:var(--text)">Save</b>.</li>
+        <li>Open the <b style="color:var(--text)">Files</b> app and tap
+            <b style="color:var(--text)">FIN437-Exam1-Trainer</b>.</li>
+      </ol>
+      <p style="font-size:15px;color:var(--dim);line-height:1.6;margin:0">
+        It opens in Safari and the first question appears right away.
+        On a computer, download the file and double-click it.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+// FIN 437 Exam 1 — question bank
+// Sourced from: 9/30 exam review notes, site due diligence deck (9/16-9/18),
+// team members deck (9/21), class notes 9/09-9/21.
+// Each question carries a concept tag; the engine uses tags to target weak areas.
+
+const CONCEPTS = {
+  units:      { name: "Units of Measure",        blurb: "43,560 / 27 / 1,613 — the conversion constants." },
+  wetland:    { name: "Wetlands & Jurisdiction", blurb: "The 0.2-acre limit, isolated vs. connected, mitigation." },
+  sitemath:   { name: "Site Math",               blurb: "Acreage, soil volume, cost calculations." },
+  parking:    { name: "Parking Layout",          blurb: "Bays, drive aisles, stall counts, return on parking." },
+  stages:     { name: "Development Stages 1–3",  blurb: "Inception, idea refinement, feasibility." },
+  dd:         { name: "Due Diligence",           blurb: "What it is, what services it includes, bad outcomes." },
+  team:       { name: "The Development Team",    blurb: "Who's on it, ranking factors, how you interact." },
+  precon:     { name: "Pre-Construction",        blurb: "What pre-con is and why it drives cost and schedule." },
+  risk:       { name: "Risk & Contracts",        blurb: "Defining risk, contract language, liability." }
+};
+
+// type: "mc" (one answer), "multi" (several/none correct), "tf", "num" (numeric entry)
+const QUESTIONS = [
+
+  // ---------- UNITS ----------
+  { id:"u1", concept:"units", type:"mc",
+    q:"How many square feet are in one acre?",
+    choices:["27,000","43,560","1,613","5,280"], answer:1,
+    why:"43,560 sq ft per acre. Write it in the margin the second you get the exam." },
+
+  { id:"u2", concept:"units", type:"mc",
+    q:"One cubic yard equals how many cubic feet?",
+    choices:["9","27","36","43.56"], answer:1,
+    why:"27 cubic feet. It's 3×3×3 — a yard on each side." },
+
+  { id:"u3", concept:"units", type:"mc",
+    q:"One acre of soil at one foot of depth equals approximately how many cubic yards?",
+    choices:["1,613","43,560","27","160"], answer:0,
+    why:"1,613 cu yd. It comes straight from 43,560 ÷ 27 — rebuild it that way if you blank." },
+
+  { id:"u4", concept:"units", type:"num",
+    q:"What is 0.2 acres expressed in square feet?",
+    answer:8712, tolerance:0,
+    hint:"Divide 43,560 by 5. Shortcut: divide by 10, then double.",
+    why:"8,712 sq ft. This is the most important derived number on the exam — every wetland size question compares against it." },
+
+  { id:"u5", concept:"units", type:"mc",
+    q:"Quantities of dirt or soil are measured in:",
+    choices:["Square feet","Cubic yards","Acres","Linear feet"], answer:1,
+    why:"Cubic yards. Cubic feet is only the intermediate step — you convert to yards by dividing by 27." },
+
+  { id:"u6", concept:"units", type:"mc",
+    q:"The cost of handling, moving, importing, or exporting dirt is expressed as:",
+    choices:["$ per square foot","$ per cubic yard","$ per acre","$ per linear foot"], answer:1,
+    why:"$ per cubic yard — matching the unit dirt is measured in." },
+
+  { id:"u7", concept:"units", type:"num",
+    q:"How many square feet is a 2.5 acre site?",
+    answer:108900, tolerance:0,
+    hint:"43,560 × 2, then add half of 43,560.",
+    why:"87,120 + 21,780 = 108,900 sq ft. Break multiplication into pieces instead of doing it long-hand." },
+
+  { id:"u8", concept:"units", type:"mc",
+    q:"A building footprint of 21,780 sq ft is what fraction of an acre?",
+    choices:["One quarter","One half","One fifth","Three quarters"], answer:1,
+    why:"Exactly half. 21,780 is one of the benchmarks worth writing down before you start." },
+
+  { id:"u9", concept:"units", type:"multi",
+    q:"Which of the following are measured in acres? (Several, one, or none may be correct.)",
+    choices:["Land masses","Building footprints","Quantities of soil","Drive aisle width"],
+    answers:[0],
+    why:"Only land masses. Footprints are square feet, soil is cubic yards, aisle width is linear feet." },
+
+  // ---------- WETLANDS ----------
+  { id:"w1", concept:"wetland", type:"num",
+    q:"You pace off a wetland at 90 ft × 60 ft. How many square feet is it?",
+    answer:5400, tolerance:0,
+    hint:"9 × 6 = 54, then put the two zeros back.",
+    why:"5,400 sq ft. Strip the zeros, multiply the small numbers, restore the zeros." },
+
+  { id:"w2", concept:"wetland", type:"mc",
+    q:"A wetland measures 5,400 sq ft. Is it more or less than 0.2 acres?",
+    choices:["More than 0.2 acres","Less than 0.2 acres","Exactly 0.2 acres","Not enough information"], answer:1,
+    why:"Less. 0.2 acres = 8,712 sq ft, and 5,400 is comfortably under it. No division needed — just compare." },
+
+  { id:"w3", concept:"wetland", type:"num",
+    q:"You pace a wetland at 80 ft × 95 ft. How many square feet?",
+    answer:7600, tolerance:0,
+    hint:"8 × 95 = 760, then add the zero.",
+    why:"7,600 sq ft — still under 8,712, so under 0.2 acres." },
+
+  { id:"w4", concept:"wetland", type:"tf",
+    q:"An isolated wetland of 0.3 acres can be filled without mitigation.",
+    answer:false,
+    why:"False. 0.3 exceeds the 0.2-acre limit, so it's jurisdictional and requires mitigation or replacement." },
+
+  { id:"w5", concept:"wetland", type:"mc",
+    q:"A wetland measures 70 ft × 100 ft and is connected to a creek that runs off-site. Is it jurisdictional?",
+    choices:[
+      "No — 7,000 sq ft is under the 0.2-acre limit",
+      "Yes — connection to other waters makes it jurisdictional regardless of size",
+      "No — only wetlands over one acre are jurisdictional",
+      "Not enough information to decide"],
+    answer:1,
+    why:"This is the trap. The 0.2-acre limit only applies to ISOLATED wetlands. Connected means jurisdictional at any size. Check connectivity before you check size." },
+
+  { id:"w6", concept:"wetland", type:"multi",
+    q:"A wetland is jurisdictional when: (Several, one, or none may be correct.)",
+    choices:[
+      "It is connected to other waters",
+      "It is isolated and over 0.2 acres",
+      "It is isolated and under 0.2 acres",
+      "It sits on a site larger than one acre"],
+    answers:[0,1],
+    why:"Both A and B. Connected = jurisdictional regardless of size; isolated only escapes if it's under 0.2 acres. Site size is irrelevant." },
+
+  { id:"w7", concept:"wetland", type:"tf",
+    q:"Mitigation of a jurisdictional wetland can only be done off-site at a wetlands bank.",
+    answer:false,
+    why:"False. Mitigation involves replacement at another location ON site, OR off-site at a wetlands bank. Both are options." },
+
+  { id:"w8", concept:"wetland", type:"mc",
+    q:"What does 'step it off conservatively' mean when pacing a wetland?",
+    choices:[
+      "Round your measurement down to stay under the limit",
+      "Round your measurement up, so you don't understate the impact",
+      "Measure it exactly with a tape",
+      "Take the average of three attempts"],
+    answer:1,
+    why:"Round UP. Under-measuring could put you below 0.2 acres when the real wetland is above it — you'd budget to fill something you're not allowed to fill and find out late." },
+
+  { id:"w9", concept:"wetland", type:"mc",
+    q:"A wetland survey identifies and quantifies potential wetlands as defined under which law?",
+    choices:["The Clean Air Act","The Clean Water Act","The Endangered Species Act","The National Environmental Policy Act"],
+    answer:1,
+    why:"The federal Clean Water Act — that's the wording from the due diligence deck." },
+
+  { id:"w10", concept:"wetland", type:"mc",
+    q:"An isolated wetland measures 100 ft × 100 ft. Can the developer plow it over?",
+    choices:[
+      "Yes — 10,000 sq ft is under the limit",
+      "No — 10,000 sq ft exceeds 8,712 sq ft, so it's over 0.2 acres",
+      "Yes — isolated wetlands are never jurisdictional",
+      "No — isolated wetlands always require mitigation"],
+    answer:1,
+    why:"10,000 > 8,712, so it's over 0.2 acres and jurisdictional despite being isolated. Both conditions have to be met to fill it." },
+
+  // ---------- SITE MATH ----------
+  { id:"s1", concept:"sitemath", type:"num",
+    q:"You have 3 acres of unsuitable soil at 2 feet of depth. How many cubic yards must be removed?",
+    answer:9678, tolerance:0,
+    hint:"acres × depth in feet × 1,613.",
+    why:"3 × 2 × 1,613 = 9,678 cu yd. (1,600×6 = 9,600, plus 13×6 = 78.)" },
+
+  { id:"s2", concept:"sitemath", type:"num",
+    q:"You have 4 acres of unsuitable soil at 18 INCHES of depth. How many cubic yards must be removed?",
+    answer:9678, tolerance:0,
+    hint:"Convert inches to feet first. 18 inches = 1.5 ft.",
+    why:"4 × 1.5 × 1,613 = 9,678 cu yd. The inches-to-feet conversion is the whole trick — if you used 18, you were off by 12×." },
+
+  { id:"s3", concept:"sitemath", type:"num",
+    q:"9,678 cubic yards of soil must be removed at $15 per cubic yard. What is the cost in dollars?",
+    answer:145170, tolerance:0,
+    hint:"Break it up: ×10, then ×5, then add.",
+    why:"96,780 + 48,390 = $145,170." },
+
+  { id:"s4", concept:"sitemath", type:"mc",
+    q:"A developer wants a 'balanced site.' What does that mean?",
+    choices:[
+      "The budget for sitework equals the budget for vertical construction",
+      "Cut and fill are roughly equal, so dirt doesn't have to be hauled in or out",
+      "The site has an equal mix of wetlands and buildable land",
+      "Parking spaces are evenly distributed across the site"],
+    answer:1,
+    why:"Cut equals fill. Importing and exporting dirt both cost money, so a balanced site avoids that expense entirely." },
+
+  { id:"s5", concept:"sitemath", type:"mc",
+    q:"You're given a soil area in square feet rather than acres. What do you do?",
+    choices:[
+      "Multiply by 1,613 directly",
+      "Multiply by depth to get cubic feet, then divide by 27",
+      "Divide by 43,560, then multiply by 27",
+      "Multiply by 27, then divide by depth"],
+    answer:1,
+    why:"sq ft × depth = cubic feet, then ÷27 = cubic yards. 1,613 only works when you START from acres." },
+
+  { id:"s6", concept:"sitemath", type:"tf",
+    q:"A skilled developer should be able to spot and roughly quantify negative site features before the engineers begin their assessment.",
+    answer:true,
+    why:"True. He made a point of this — the developer walks the site in Stage One, and quantifying issues early feeds the sitework budget." },
+
+  // ---------- PARKING ----------
+  { id:"p1", concept:"parking", type:"mc",
+    q:"A parking bay consists of:",
+    choices:[
+      "A single row of spaces",
+      "A row of spaces + a drive aisle + a row of spaces on the other side",
+      "The drive aisle only",
+      "The entire parking lot"],
+    answer:1,
+    why:"A double-loaded bay = spaces + drive aisle + spaces. It's the repeating building block you tile across a site." },
+
+  { id:"p2", concept:"parking", type:"mc",
+    q:"When calculating how many parking bays fit in a given site depth, you should:",
+    choices:[
+      "Round up to the nearest whole bay",
+      "Round down to the nearest whole bay",
+      "Round to the nearest whole bay",
+      "Keep the decimal"],
+    answer:1,
+    why:"Round DOWN. A partial bay has no pavement to park on. (Note this is the opposite direction from wetland pacing — both are conservative, they just point different ways.)" },
+
+  { id:"p3", concept:"parking", type:"num",
+    q:"A parking row is 180 ft long and stalls are 9 ft wide. How many spaces fit in that row?",
+    answer:20, tolerance:0,
+    hint:"Row length ÷ stall width.",
+    why:"180 ÷ 9 = 20 spaces." },
+
+  { id:"p4", concept:"parking", type:"num",
+    q:"Stalls are 18 ft deep and the drive aisle is 24 ft wide. How deep is one double-loaded bay, in feet?",
+    answer:60, tolerance:0,
+    hint:"Two rows of stalls plus the aisle between them.",
+    why:"18 + 24 + 18 = 60 ft." },
+
+  { id:"p5", concept:"parking", type:"num",
+    q:"A lot is 180 ft long × 130 ft deep. Stalls 9 ft wide, 18 ft deep; aisles 24 ft. Plus 6 additional spaces at the end. How many total spaces?",
+    answer:86, tolerance:0,
+    hint:"Spaces per row, then how many full 60 ft bays fit in the depth, then 2 rows per bay.",
+    why:"180÷9 = 20 per row. 130÷60 = 2.16 → 2 bays → 4 rows. 20×4 = 80, plus 6 = 86 spaces." },
+
+  { id:"p6", concept:"parking", type:"num",
+    q:"A lot is 200 ft long × 125 ft deep. Stalls 9 ft wide, 18 ft deep; aisles 24 ft. No additional parking. How many spaces?",
+    answer:88, tolerance:0,
+    hint:"Round the spaces-per-row down too — you can't have a partial stall.",
+    why:"200÷9 = 22.2 → 22 per row. 125÷60 = 2.08 → 2 bays → 4 rows. 22×4 = 88 spaces." },
+
+  { id:"p7", concept:"parking", type:"mc",
+    q:"Why is parking described as having the single highest return?",
+    choices:[
+      "Parking is subsidized by most municipalities",
+      "There's effectively no remaining upfront cost and minimal maintenance, so revenue is nearly pure profit",
+      "Parking spaces appreciate faster than buildings",
+      "Parking requires no permitting"],
+    answer:1,
+    why:"Once built, there's no upfront cost left to recover and little maintenance — so revenue drops almost entirely to the bottom line." },
+
+  { id:"p8", concept:"parking", type:"num",
+    q:"88 spaces at $4/day with 80% occupancy. What is daily revenue in dollars?",
+    answer:280, tolerance:0,
+    hint:"Find occupied spaces first, rounding down. Then multiply by the rate.",
+    why:"88 × 0.80 = 70.4 → 70 occupied. 70 × $4 = $280/day. Partial cars don't pay." },
+
+  { id:"p9", concept:"parking", type:"multi",
+    q:"To calculate the return on a parking area, you would need to know: (Several, one, or none may be correct.)",
+    choices:["Number of spaces","The rate charged","The utilization/occupancy rate","The time period (daily, monthly, annual)"],
+    answers:[0,1,2,3],
+    why:"All four. This is exactly the kind of 'several or all correct' item he warned about — evaluate each option on its own." },
+
+  // ---------- STAGES ----------
+  { id:"g1", concept:"stages", type:"tf",
+    q:"Stage One is focused on a specific site, while Stage Two is focused on a general location.",
+    answer:false,
+    why:"False — it's reversed. Stage One (Inception) is a LOCATION; Stage Two (Idea Refinement) is a specific SITE. Watch for questions that flip a pair he taught together." },
+
+  { id:"g2", concept:"stages", type:"mc",
+    q:"Stage Two, Idea Refinement, is best described as:",
+    choices:[
+      "Securing construction financing",
+      "Finding and controlling the right piece of dirt while making an initial determination of feasibility",
+      "Selecting the general contractor",
+      "Completing the pro forma"],
+    answer:1,
+    why:"That's nearly his exact wording from the 9/16 notes." },
+
+  { id:"g3", concept:"stages", type:"mc",
+    q:"During which stage should the developer walk the site?",
+    choices:[
+      "Stage One, before the engineers begin their assessment",
+      "Stage Three, after feasibility is proven",
+      "Stage Four, during contract negotiation",
+      "Stage Five, at formal commitment"],
+    answer:0,
+    why:"Stage One. The developer walks it before engineers start, so negative features get spotted before anyone is paid to look." },
+
+  { id:"g4", concept:"stages", type:"mc",
+    q:"Which stage is 'Proving the Concept'?",
+    choices:["Stage One","Stage Two","Stage Three — Feasibility","Stage Four"],
+    answer:2,
+    why:"Stage Three, Feasibility — confirming the numbers actually work." },
+
+  { id:"g5", concept:"stages", type:"tf",
+    q:"A pro forma is required content on this exam.",
+    answer:false,
+    why:"False — he said this twice, in capital letters: NO PRO FORMA on Exam 1. Don't spend study time there." },
+
+  // ---------- DUE DILIGENCE ----------
+  { id:"d1", concept:"dd", type:"mc",
+    q:"Due diligence is best defined as:",
+    choices:[
+      "The period of time allowed for investigation into the physical and legal characteristics of a site",
+      "The negotiation of the construction contract",
+      "The marketing study for a proposed project",
+      "The process of obtaining construction financing"],
+    answer:0,
+    why:"Physical AND legal characteristics — both halves matter, and 'deciding if it's feasible' is the purpose." },
+
+  { id:"d2", concept:"dd", type:"multi",
+    q:"Due diligence includes which of the following? (Several, one, or none may be correct.)",
+    choices:["Phase 1 Environmental Site Assessment","Geotechnical exploration","Wetland survey","Signing the construction contract"],
+    answers:[0,1,2],
+    why:"A, B, and C. Signing the construction contract is Stage Four — well past due diligence." },
+
+  { id:"d3", concept:"dd", type:"multi",
+    q:"A site assessment requires the services of: (Several, one, or none may be correct.)",
+    choices:["A geotechnical engineer","An environmental testing firm","An interior decorator","A permit expeditor"],
+    answers:[0,1],
+    why:"Geotechnical engineer and environmental testing firm. The other two come much later." },
+
+  { id:"d4", concept:"dd", type:"tf",
+    q:"Negative due diligence outcomes can usually be overcome, but at a cost to the developer.",
+    answer:true,
+    why:"True — that's his phrasing. They can be overcome, but there's a cost and a schedule impact." },
+
+  { id:"d5", concept:"dd", type:"mc",
+    q:"When a negative due diligence outcome surfaces, what must the developer do?",
+    choices:[
+      "Wait for the engineer's final report before acting",
+      "Immediately start the process of determining the cost and schedule impact",
+      "Terminate the contract automatically",
+      "Notify the lender before doing anything else"],
+    answer:1,
+    why:"Immediately start determining cost and schedule. He was explicit about the word 'immediately.'" },
+
+  { id:"d6", concept:"dd", type:"multi",
+    q:"Examples of bad biological survey outcomes include: (Several, one, or none may be correct.)",
+    choices:["Bald eagle nests","Gopher tortoises","Endangered plants","Skinks"],
+    answers:[0,1,2,3],
+    why:"All four were his examples. When every option looks right, that's often because it is — he warned that several or all may be correct." },
+
+  { id:"d7", concept:"dd", type:"mc",
+    q:"What does an opportunities and constraints analysis do?",
+    choices:[
+      "Identifies unusual portions of the site and site assets such as access points and views",
+      "Determines the seismic site class",
+      "Calculates the return on parking",
+      "Establishes the construction schedule"],
+    answer:0,
+    why:"It identifies unusual portions of the site plus assets like access points and views." },
+
+  { id:"d8", concept:"dd", type:"mc",
+    q:"Geotechnical engineering is the branch of civil engineering that studies:",
+    choices:[
+      "How soils interact with the structures built upon them",
+      "How water moves across a site",
+      "How traffic patterns affect access",
+      "How zoning affects density"],
+    answer:0,
+    why:"Soils interacting with structures — that's the deck's exact definition." },
+
+  { id:"d9", concept:"dd", type:"multi",
+    q:"Which are methods of soils analysis? (Several, one, or none may be correct.)",
+    choices:[
+      "Soil borings with Standard Penetration Testing",
+      "Excavated test pits",
+      "Cone Penetration Testing",
+      "Ground Penetrating Radar"],
+    answers:[0,1,2,3],
+    why:"All four. Ground Penetrating Radar falls under geophysical methods, which the deck lists as a soils analysis technique." },
+
+  // ---------- TEAM ----------
+  { id:"t1", concept:"team", type:"multi",
+    q:"Which factors were used to rank development team members on the 1–10 scale? (Several, one, or none may be correct.)",
+    choices:[
+      "Potential to cause schedule impacts",
+      "Importance of being local to the site",
+      "Importance of asset class experience",
+      "Potential to cause budget impacts"],
+    answers:[0,1,2,3],
+    why:"All four, plus contract agreement language, cost as a share of total hard costs, and likelihood of legal liability from miscues." },
+
+  { id:"t2", concept:"team", type:"multi",
+    q:"Which of these are members of the real estate development team? (Several, one, or none may be correct.)",
+    choices:["Surveyor","Traffic engineer","Landscape architect","Permit expeditor"],
+    answers:[0,1,2,3],
+    why:"All four appear on his list, along with the geotechnical engineer, environmental testing firm, civil site engineer, attorney, GC, architect, and the various contractors." },
+
+  { id:"t3", concept:"team", type:"mc",
+    q:"How is RISK defined?",
+    choices:[
+      "The chance that a project will run over budget",
+      "The possibility that an action, decision, or event will lead to a bad or negative outcome",
+      "The likelihood of a lawsuit",
+      "The variance between projected and actual returns"],
+    answer:1,
+    why:"That's his definition nearly word for word." },
+
+  { id:"t4", concept:"team", type:"mc",
+    q:"What are the two things a developer is responsible for regarding risk?",
+    choices:[
+      "Avoiding it and insuring it",
+      "Identifying it and quantifying it",
+      "Transferring it and documenting it",
+      "Pricing it and hedging it"],
+    answer:1,
+    why:"Identifying risk and quantifying risk — the same two-step pattern as spotting site issues and putting a number on them." },
+
+  { id:"t5", concept:"team", type:"mc",
+    q:"Which economic factor was called out as having an impact on residential development?",
+    choices:[
+      "Increased interest rates",
+      "Falling unemployment",
+      "Currency exchange rates",
+      "Commodity futures"],
+    answer:0,
+    why:"Increased interest rates — he tied it to the Fed raising rates the prior week." },
+
+  // ---------- PRECON ----------
+  { id:"c1", concept:"precon", type:"mc",
+    q:"Pre-construction is best described as:",
+    choices:[
+      "The collection of multiple tasks, services, and information that outside team members provide prior to construction",
+      "The period after the building permit is issued",
+      "The developer's initial site walk",
+      "The completed pro forma"],
+    answer:0,
+    why:"That's nearly his exact wording from the review sheet." },
+
+  { id:"c2", concept:"precon", type:"tf",
+    q:"Pre-construction services are provided after construction begins.",
+    answer:false,
+    why:"False — pre-con is everything PRIOR to construction. The name is the definition." },
+
+  { id:"c3", concept:"precon", type:"mc",
+    q:"Why is interaction with the development team during pre-con so important?",
+    choices:[
+      "It determines the marketing strategy",
+      "It drives the cost and the scheduling of the project",
+      "It sets the lease rates",
+      "It establishes the ownership structure"],
+    answer:1,
+    why:"Cost and scheduling. Decisions are still cheap to change on paper; the same change in the field costs money and time." },
+
+  { id:"c4", concept:"precon", type:"mc",
+    q:"'Free-con' refers to:",
+    choices:[
+      "Pre-construction services a contractor provides at no charge to win position on the project",
+      "A contract with no penalty clauses",
+      "Free land contributed by a municipality",
+      "A permit issued without fee"],
+    answer:0,
+    why:"The GC provides pre-con effort without charging, because they're buying position on the job rather than donating labor." },
+
+  // ---------- RISK / CONTRACTS ----------
+  { id:"r1", concept:"risk", type:"mc",
+    q:"Why is contract agreement language important?",
+    choices:[
+      "It determines the project's tax treatment",
+      "It allocates risk, so when something goes wrong it's clear who absorbs the cost",
+      "It sets the construction schedule",
+      "It establishes the architect's fee"],
+    answer:1,
+    why:"Contracts allocate risk. Vague language turns a construction problem into a dispute about who pays." },
+
+  { id:"r2", concept:"risk", type:"tf",
+    q:"Formal agreements are a major topic on this exam.",
+    answer:false,
+    why:"False. He said there's nothing on formal agreements, and no problems on professional skills." },
+
+  { id:"r3", concept:"risk", type:"mc",
+    q:"On this exam, a multiple choice question may have:",
+    choices:[
+      "Exactly one correct answer",
+      "Several correct answers, or none at all",
+      "Always two correct answers",
+      "At most one correct answer"],
+    answer:1,
+    why:"Several or none. Evaluate every option independently as its own true/false — don't stop at the first one that looks right." }
+];
+
+</script>
+<script>
+/* ---------------- state ---------------- */
+const KEY = "fin437_trainer_v1";
+const BLANK = { seen:{}, streak:0, best:0, total:0, correct:0, session:[] };
+let S = load();
+function load(){
+  try { const r = localStorage.getItem(KEY);
+    if(r){ const p = JSON.parse(r); return Object.assign({}, BLANK, p); } }
+  catch(e){}
+  return JSON.parse(JSON.stringify(BLANK));
+}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+
+/* per-question record: {n: times asked, c: times right, last: ts, streak: consecutive right} */
+function rec(id){ return S.seen[id] || { n:0, c:0, last:0, streak:0 }; }
+
+/* ------------- adaptive selection -------------
+   Weight each question by how much practice it still needs.
+   Never-seen questions rank highest, then recently-missed,
+   then anything whose concept is weak. Mastered items fade out. */
+function conceptScore(tag){
+  let n=0, c=0;
+  QUESTIONS.filter(q=>q.concept===tag).forEach(q=>{ const r=rec(q.id); n+=r.n; c+=r.c; });
+  return n===0 ? null : c/n;
+}
+function weight(q){
+  const r = rec(q.id);
+  if(r.n === 0) return 100;                 // unseen — top priority
+  let w = 10;
+  if(r.streak === 0) w += 55;               // missed last time
+  else if(r.streak === 1) w += 22;          // only one right in a row
+  else if(r.streak >= 3) w = 2;             // mastered — rare review
+  const cs = conceptScore(q.concept);
+  if(cs !== null && cs < 0.7) w += 28;      // weak concept overall
+  const hrs = (Date.now() - r.last) / 36e5; // spaced repetition nudge
+  if(hrs > 6) w += 12;
+  return Math.max(w, 1);
+}
+function pick(){
+  const pool = QUESTIONS.filter(q => !S.session.slice(-6).includes(q.id));
+  const list = pool.length ? pool : QUESTIONS;
+  const ws = list.map(weight);
+  let t = ws.reduce((a,b)=>a+b,0), r = Math.random()*t;
+  for(let i=0;i<list.length;i++){ r -= ws[i]; if(r<=0) return list[i]; }
+  return list[list.length-1];
+}
+
+/* ---------------- grading ---------------- */
+function grade(q, ans){
+  if(q.type==="mc")   return ans === q.answer;
+  if(q.type==="tf")   return ans === q.answer;
+  if(q.type==="num")  return Math.abs(ans - q.answer) <= (q.tolerance||0);
+  if(q.type==="multi"){
+    const a=[...ans].sort((x,y)=>x-y), b=[...q.answers].sort((x,y)=>x-y);
+    return a.length===b.length && a.every((v,i)=>v===b[i]);
+  }
+  return false;
+}
+function record(q, ok){
+  const r = rec(q.id);
+  r.n++; r.last = Date.now();
+  if(ok){ r.c++; r.streak++; } else { r.streak = 0; }
+  S.seen[q.id] = r;
+  S.total++; if(ok) S.correct++;
+  S.streak = ok ? S.streak+1 : 0;
+  if(S.streak > S.best) S.best = S.streak;
+  S.session.push(q.id);
+  if(S.session.length > 40) S.session = S.session.slice(-40);
+  save();
+}
+
+/* ---------------- views ---------------- */
+let view = "quiz", cur = null, sel = null, locked = false, showHint = false;
+const el = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+
+document.querySelectorAll(".tab").forEach(t => t.onclick = () => {
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));
+  t.classList.add("on"); view = t.dataset.v; render();
+});
+
+function daysLeft(){
+  const exam = new Date(2026,9,2,8,0,0);      // Oct 2 2026
+  const d = Math.ceil((exam - new Date())/864e5);
+  if(d > 1) return d + " days to exam";
+  if(d === 1) return "Exam tomorrow";
+  if(d === 0) return "Exam today";
+  return "";
+}
+
+function render(){
+  el("days").textContent = daysLeft();
+  if(view === "quiz") renderQuiz();
+  else if(view === "mastery") renderMastery();
+  else renderRef();
+}
+
+/* ---------- practice ---------- */
+function renderQuiz(){
+  if(!cur){ cur = pick(); sel = (cur.type==="multi") ? [] : null; locked=false; showHint=false; }
+  const q = cur, r = rec(q.id);
+  const acc = S.total ? Math.round(S.correct/S.total*100) : 0;
+  const tl = { mc:"Multiple choice", multi:"Select all that apply", tf:"True / False", num:"Calculate" }[q.type];
+
+  let h = `<div class="prog">
+      <span>${S.total} answered · ${acc}% correct</span>
+      <span class="streak">${S.streak>0 ? "🔥 "+S.streak+" in a row" : ""}</span>
+    </div><div class="card">
+      <span class="ctag">${esc(CONCEPTS[q.concept].name)}</span>
+      <span class="qtype">${tl}</span>
+      <p class="q">${esc(q.q)}</p>`;
+
+  if(q.type === "num"){
+    h += `<input type="number" id="na" placeholder="Your answer" inputmode="decimal"
+            ${locked?"disabled":""} value="${sel!==null&&sel!==undefined?sel:""}">`;
+    if(showHint && !locked && q.hint) h += `<div class="hint">💡 ${esc(q.hint)}</div>`;
+  } else {
+    const opts = q.type==="tf" ? ["True","False"] : q.choices;
+    const shape = q.type==="multi" ? "sq" : "rd";
+    opts.forEach((o,i) => {
+      const val = q.type==="tf" ? (i===0) : i;
+      const chosen = q.type==="multi" ? sel.includes(i) : sel===val;
+      let cls = "opt" + (chosen?" sel":"") + (locked?" locked":"");
+      let mark = chosen ? (q.type==="multi"?"✓":"●") : "";
+      if(locked){
+        const isAns = q.type==="multi" ? q.answers.includes(i)
+                    : q.type==="tf" ? (q.answer===val) : (q.answer===i);
+        cls = "opt locked";
+        if(isAns && chosen){ cls+=" right"; mark="✓"; }
+        else if(isAns && !chosen){ cls+=" miss"; mark=""; }
+        else if(!isAns && chosen){ cls+=" wrong"; mark="✕"; }
+      }
+      h += `<div class="${cls}" data-i="${i}">
+              <span class="box ${shape}">${mark}</span><span>${esc(o)}</span></div>`;
+    });
+  }
+
+  if(!locked){
+    h += `<div class="row">
+        <button id="sub">Check answer</button>
+        ${q.type==="num" && q.hint ? `<button class="ghost" id="hint" style="flex:0 0 auto">Hint</button>`:""}
+      </div>`;
+  } else {
+    const ok = grade(q, sel);
+    h += `<div class="fb ${ok?"ok":"no"}">
+        <b>${ok ? "Correct" : "Not quite"}</b>
+        ${!ok && q.type==="num" ? `The answer is <b style="display:inline">${q.answer.toLocaleString()}</b>. ` : ""}
+        ${esc(q.why)}</div>
+      <button class="wide" id="next">Next question →</button>`;
+    if(r.n > 1) h += `<div class="mini">You've seen this one ${r.n} times — ${r.c} right.</div>`;
+  }
+  h += `</div>`;
+
+  const tried = Object.keys(S.seen).length;
+  h += `<div class="mini" style="text-align:center">
+      ${tried} of ${QUESTIONS.length} questions attempted ·
+      <a href="#" id="reset">reset progress</a></div>`;
+
+  el("view").innerHTML = h;
+
+  document.querySelectorAll(".opt:not(.locked)").forEach(o => o.onclick = () => {
+    const i = +o.dataset.i;
+    if(cur.type === "multi"){
+      const k = sel.indexOf(i); k>=0 ? sel.splice(k,1) : sel.push(i);
+    } else sel = (cur.type==="tf") ? (i===0) : i;
+    renderQuiz();
+  });
+  if(el("hint")) el("hint").onclick = () => { showHint = true; renderQuiz(); };
+  if(el("sub")) el("sub").onclick = submit;
+  if(el("next")) el("next").onclick = () => { cur=null; renderQuiz(); };
+  if(el("na")){
+    el("na").oninput = e => sel = e.target.value===""?null:parseFloat(e.target.value);
+    el("na").onkeydown = e => { if(e.key==="Enter") submit(); };
+    if(!locked) el("na").focus();
+  }
+  el("reset").onclick = e => {
+    e.preventDefault();
+    if(confirm("Erase all progress and start over?")){
+      S = JSON.parse(JSON.stringify(BLANK)); save(); cur=null; render();
+    }
+  };
+}
+
+function submit(){
+  if(cur.type === "multi"){ if(!sel.length) return; }
+  else if(sel === null || sel === undefined || (typeof sel==="number" && isNaN(sel))) return;
+  locked = true;
+  record(cur, grade(cur, sel));
+  renderQuiz();
+}
+
+/* ---------- mastery ---------- */
+function renderMastery(){
+  const acc = S.total ? Math.round(S.correct/S.total*100) : 0;
+  let h = `<div class="stats">
+      <div class="stat"><div class="v">${S.total}</div><div class="l">Answered</div></div>
+      <div class="stat"><div class="v" style="color:${acc>=80?'var(--good)':acc>=60?'var(--warn)':'var(--bad)'}">${acc}%</div><div class="l">Accuracy</div></div>
+      <div class="stat"><div class="v" style="color:var(--gold)">${S.best}</div><div class="l">Best streak</div></div>
+    </div>`;
+
+  const rows = Object.keys(CONCEPTS).map(tag => {
+    const qs = QUESTIONS.filter(q=>q.concept===tag);
+    let n=0,c=0,mastered=0;
+    qs.forEach(q=>{ const r=rec(q.id); n+=r.n; c+=r.c; if(r.streak>=2) mastered++; });
+    return { tag, n, c, mastered, tot:qs.length,
+             pct: n ? Math.round(c/n*100) : null };
+  });
+
+  const weak = rows.filter(r=>r.pct!==null && r.pct<70).sort((a,b)=>a.pct-b.pct);
+  const untouched = rows.filter(r=>r.pct===null);
+
+  if(S.total === 0){
+    h += `<div class="banner"><div class="h">Nothing tracked yet</div>
+      <div class="b">Answer a few questions and this page will show which concepts
+      you've got and which ones keep coming back. The quiz automatically feeds you
+      more of whatever you're missing.</div></div>`;
+  } else if(weak.length){
+    h += `<div class="banner"><div class="h">Focus here first</div><div class="b">
+      <b>${esc(CONCEPTS[weak[0].tag].name)}</b> is your weakest area at ${weak[0].pct}%.
+      ${weak.length>1 ? "Also shaky: "+weak.slice(1,3).map(w=>esc(CONCEPTS[w.tag].name)).join(", ")+"." : ""}
+      The practice tab is already weighting toward these.</div></div>`;
+  } else if(untouched.length){
+    h += `<div class="banner"><div class="h">Good so far</div><div class="b">
+      Nothing below 70%. You still haven't touched:
+      ${untouched.map(u=>esc(CONCEPTS[u.tag].name)).join(", ")}.</div></div>`;
+  } else {
+    h += `<div class="banner"><div class="h">Every concept above 70%</div><div class="b">
+      Keep going — questions you've answered right twice in a row start appearing
+      much less often, so what's left is what still needs work.</div></div>`;
+  }
+
+  h += `<div class="card">`;
+  rows.forEach(r => {
+    const col = r.pct===null ? "var(--line)"
+              : r.pct>=80 ? "var(--good)" : r.pct>=60 ? "var(--warn)" : "var(--bad)";
+    h += `<div class="mrow">
+        <div class="nm">
+          <div class="t">${esc(CONCEPTS[r.tag].name)}</div>
+          <div class="d">${esc(CONCEPTS[r.tag].blurb)}</div>
+          <div class="bar"><div class="fill" style="width:${r.pct===null?0:r.pct}%;background:${col}"></div></div>
+          <div class="d">${r.mastered}/${r.tot} questions mastered${r.n?` · ${r.c}/${r.n} right`:""}</div>
+        </div>
+        <div class="pct" style="color:${col}">${r.pct===null?"—":r.pct+"%"}</div>
+      </div>`;
+  });
+  h += `</div><div class="mini" style="text-align:center">
+    "Mastered" = answered right twice in a row. Those fade out of rotation.</div>`;
+  el("view").innerHTML = h;
+}
+
+/* ---------- formulas ---------- */
+function renderRef(){
+  el("view").innerHTML = `
+  <div class="banner"><div class="h">Write these down first</div>
+    <div class="b">The moment you're handed the exam, before reading a single question,
+    copy these into the margin. Half of test panic is fear of blanking on a number.</div></div>
+
+  <div class="card">
+    <span class="ctag">The four constants</span>
+    <div class="mrow"><div class="nm"><div class="t">43,560</div>
+      <div class="d">square feet in one acre</div></div></div>
+    <div class="mrow"><div class="nm"><div class="t">27</div>
+      <div class="d">cubic feet in one cubic yard</div></div></div>
+    <div class="mrow"><div class="nm"><div class="t">1,613</div>
+      <div class="d">cubic yards in one acre-foot of soil (= 43,560 ÷ 27)</div></div></div>
+    <div class="mrow"><div class="nm"><div class="t">0.2 acres</div>
+      <div class="d">jurisdictional limit for <i>isolated</i> wetlands</div></div></div>
+  </div>
+
+  <div class="card">
+    <span class="ctag">Benchmarks to derive</span>
+    <div class="mrow"><div class="nm"><div class="t">8,712 sq ft</div>
+      <div class="d">0.2 acres — the number every wetland compares against.
+      43,560 ÷ 10 = 4,356, then double.</div></div></div>
+    <div class="mrow"><div class="nm"><div class="t">21,780 sq ft</div>
+      <div class="d">half an acre</div></div></div>
+    <div class="mrow"><div class="nm"><div class="t">10,890 sq ft</div>
+      <div class="d">quarter acre</div></div></div>
+    <div class="mrow"><div class="nm"><div class="t">4,356 sq ft</div>
+      <div class="d">tenth of an acre</div></div></div>
+  </div>
+
+  <div class="card">
+    <span class="ctag">Formulas</span>
+    <div class="mrow"><div class="nm"><div class="t">Soil volume</div>
+      <div class="d">acres × depth in feet × 1,613 = cubic yards<br>
+      From square feet instead: sq ft × depth ÷ 27</div></div></div>
+    <div class="mrow"><div class="nm"><div class="t">Parking bay depth</div>
+      <div class="d">stall + aisle + stall (18 + 24 + 18 = 60 ft typical)</div></div></div>
+    <div class="mrow"><div class="nm"><div class="t">Parking count</div>
+      <div class="d">(row length ÷ stall width) × (2 × full bays in depth) + extras<br>
+      Round everything DOWN</div></div></div>
+    <div class="mrow"><div class="nm"><div class="t">Parking revenue</div>
+      <div class="d">spaces × occupancy × rate × periods</div></div></div>
+  </div>
+
+  <div class="card">
+    <span class="ctag">Traps he set up</span>
+    <div class="mrow"><div class="nm"><div class="t">Connectivity beats size</div>
+      <div class="d">A connected wetland is jurisdictional at <i>any</i> size.
+      Check connected-vs-isolated BEFORE you check acreage.</div></div></div>
+    <div class="mrow"><div class="nm"><div class="t">Rounding direction</div>
+      <div class="d">Pacing a wetland → round UP (conservative).
+      Counting parking → round DOWN. Ask what makes you safe.</div></div></div>
+    <div class="mrow"><div class="nm"><div class="t">Depth in inches</div>
+      <div class="d">Convert to feet before using 1,613. 18 in = 1.5 ft.</div></div></div>
+    <div class="mrow"><div class="nm"><div class="t">Stage One vs Two</div>
+      <div class="d">One = a LOCATION. Two = a specific SITE. He'll flip them.</div></div></div>
+    <div class="mrow"><div class="nm"><div class="t">Multiple choice</div>
+      <div class="d">Several answers may be right — or none.
+      Judge each option as its own true/false.</div></div></div>
+    <div class="mrow"><div class="nm"><div class="t">Not on the exam</div>
+      <div class="d">No pro forma. No formal agreements. No professional skills problems.</div></div></div>
+  </div>
+
+  <div class="card">
+    <span class="ctag">Still to confirm</span>
+    <div class="mini" style="margin-top:0">
+      <b>1. The homework number</b> — % of U.S. land previously developed. He flagged it as
+      a very specific answer and said to look back at the assignment. Get it from your own homework.<br><br>
+      <b>2. Parking dimensions</b> — 9×18 stalls and 24 ft aisles are the industry standard,
+      not something from his decks. If he gave different numbers in class, use his.
+      He said he'll provide the figures, so the method matters more than the constants.
+    </div>
+  </div>`;
+}
+
+render();
+</script>
+</body>
+</html>
