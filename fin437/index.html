@@ -9,9 +9,14 @@
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   :root {
-    --bg:#12121c; --card:#1e1e2e; --card2:#26263a; --line:#33334d;
-    --text:#e9e9f2; --dim:#a0a0b8; --accent:#5b8dee; --good:#3ecf8e;
-    --bad:#ef5f6b; --warn:#f0a03c; --gold:#d4af37;
+    /* Wofford College palette — Athletics Brand Book 2026 (v1.2).
+       Old Gold #8A6E4B (PMS 873) and Black #282829 are the primaries;
+       the neutrals below are the guide's official supporting swatches.
+       Khaki #C7B37F is reserved and is never used here as a stand-in for Old Gold. */
+    --bg:#282829; --card:#333335; --card2:#3d3d40; --line:#4d4d50;
+    --text:#E9E6E1; --dim:#D6D7D8; --accent:#8A6E4B; --good:#3ecf8e;
+    --bad:#ef5f6b; --warn:#C7B37F; --gold:#8A6E4B;
+    --stone:#95866A; --slate:#636466;
   }
   html,body { margin:0; padding:0; background:var(--bg); color:var(--text);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
@@ -21,6 +26,10 @@
   header { display:flex; align-items:center; justify-content:space-between;
     padding:6px 0 14px; border-bottom:1px solid var(--line); margin-bottom:16px; flex-wrap:wrap; gap:8px; }
   h1 { font-size:17px; margin:0; font-weight:650; letter-spacing:-.2px; }
+  .brand { display:flex; align-items:center; gap:11px; }
+  .mark { flex:none; display:block; }
+  footer.colophon { margin-top:28px; padding-top:14px; border-top:1px solid var(--line);
+    font-size:11px; color:var(--slate); line-height:1.6; }
   .sub { font-size:12px; color:var(--dim); margin-top:2px; }
   .days { font-size:12px; color:var(--warn); font-weight:600; }
 
@@ -113,9 +122,12 @@
 <div class="wrap">
 
   <header>
-    <div>
-      <h1>FIN 437 — Exam 1 Trainer</h1>
-      <div class="sub">Real Estate Development · adaptive practice</div>
+    <div class="brand">
+      <img src="terrier.svg" alt="" class="mark" width="34" height="34">
+      <div>
+        <h1>FIN 437 — Exam 1 Trainer</h1>
+        <div class="sub">Real Estate Development · adaptive practice</div>
+      </div>
     </div>
     <div class="days" id="days">Open in Safari to start</div>
   </header>
@@ -150,6 +162,11 @@
       </p>
     </div>
   </div>
+  <footer class="colophon">
+    Colors from the Wofford College Athletics Brand Book 2026 (Old Gold PMS 873 / Black).
+    Unofficial study tool made for one student — not affiliated with, endorsed by, or produced
+    by Wofford College, and it uses no official college logo or registered mark.
+  </footer>
 </div>
 
 <script src="questions.js"></script>
