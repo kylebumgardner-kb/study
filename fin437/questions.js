@@ -12,7 +12,9 @@ const CONCEPTS = {
   dd:         { name: "Due Diligence",           blurb: "What it is, what services it includes, bad outcomes." },
   team:       { name: "The Development Team",    blurb: "Who's on it, ranking factors, how you interact." },
   precon:     { name: "Pre-Construction",        blurb: "What pre-con is and why it drives cost and schedule." },
-  risk:       { name: "Risk & Contracts",        blurb: "Defining risk, contract language, liability." }
+  risk:       { name: "Risk & Contracts",        blurb: "Defining risk, contract language, liability." },
+  ch12:       { name: "Chapter 12 Reading",      blurb: "Concept stage, site control dilemma, residual analysis, growth models." },
+  chain:      { name: "Chain of Command",        blurb: "Who hires whom, equity vs. debt, the cast of characters." }
 };
 
 // type: "mc" (one answer), "multi" (several/none correct), "tf", "num" (numeric entry)
@@ -612,5 +614,415 @@ const QUESTIONS = [
       "32 spaces — one bay, two rows",
       "8 spaces"],
     answer:1,
-    why:"58 ÷ 60 = 0.97 → 0 bays. Two feet short of a single double-loaded bay. If you rounded 0.97 up to 1 you got this wrong — that's exactly the instinct being tested. In practice you'd go single-loaded (42 ft) and get one row of 16, but with double-loaded bays the answer is zero." }
+    why:"58 ÷ 60 = 0.97 → 0 bays. Two feet short of a single double-loaded bay. If you rounded 0.97 up to 1 you got this wrong — that's exactly the instinct being tested. In practice you'd go single-loaded (42 ft) and get one row of 16, but with double-loaded bays the answer is zero." },
+
+  // ---------- CHAPTER 12 READING ----------
+  { id:"ch1", concept:"ch12", type:"mc",
+    q:"At the concept stage, where does the project exist?",
+    choices:[
+      "In a signed option agreement with the landowner",
+      "Only in the mind of the developer, expressed in a spreadsheet",
+      "In preliminary drawings produced by the architect",
+      "As a recorded plat with the county"],
+    answer:1,
+    why:"Only in the developer's mind, expressed in a spreadsheet. At this point the spreadsheet IS the project." },
+
+  { id:"ch2", concept:"ch12", type:"mc",
+    q:"In Stage Two, which way does the search run?",
+    choices:[
+      "The site is looking for an idea",
+      "The idea is looking for a site",
+      "The lender is looking for both",
+      "The broker matches existing ideas to existing sites"],
+    answer:1,
+    why:"The idea is looking for a site. Note the direction — the idea comes first, then the hunt for dirt. Reversing this is a classic miss." },
+
+  { id:"ch3", concept:"ch12", type:"mc",
+    q:"The biggest challenge at idea refinement is:",
+    choices:["Securing construction financing","Effective communication","Obtaining entitlements","Balancing the site"],
+    answer:1,
+    why:"Effective communication. The developer has to sell a vision that exists only in a spreadsheet." },
+
+  { id:"ch4", concept:"ch12", type:"mc",
+    q:"Residual analysis determines:",
+    choices:[
+      "The leftover land at the edge of a site after the footprint is set",
+      "The value of the improvements to be built, less direct and indirect costs",
+      "The remaining contingency in the pro forma after bidding",
+      "The soil remaining after cut and fill are balanced"],
+    answer:1,
+    why:"Value of the improvements minus direct and indirect costs. What's left over — the residual — is what the land is worth to this developer for this project." },
+
+  { id:"ch5", concept:"ch12", type:"mc",
+    q:"What does residual analysis imply about land value?",
+    choices:[
+      "Land value sets a ceiling on what can be built",
+      "Land value is derived from what can profitably be built on it",
+      "Land value and construction cost move independently",
+      "Land value is fixed by comparable sales regardless of use"],
+    answer:1,
+    why:"Land value is DERIVED from what can profitably be built — not the other way around. That's the whole conceptual point." },
+
+  { id:"ch6", concept:"ch12", type:"mc",
+    q:"Which is NOT one of the four early urban growth models?",
+    choices:["Concentric Zone theory","Axial theory","Residual Sector theory","Multiple Nuclei theory"],
+    answer:2,
+    why:"'Residual Sector theory' is invented. The four are Concentric Zone, Axial, Sector, and Multiple Nuclei." },
+
+  { id:"ch7", concept:"ch12", type:"mc",
+    q:"How does the reading treat 'edge cities'?",
+    choices:[
+      "As one of the four classical growth models",
+      "As a later settlement pattern, beyond the four classical models",
+      "As a zoning classification for suburban commercial land",
+      "As the outer boundary of a metropolitan statistical area"],
+    answer:1,
+    why:"A LATER pattern, not one of the four. Don't let it get smuggled into the list — the fourth model is Multiple Nuclei." },
+
+  { id:"ch8", concept:"ch12", type:"mc",
+    q:"Which three forces does the reading say are rapidly affecting settlement patterns and land uses?",
+    choices:[
+      "Interest rates, tax policy, and labor supply",
+      "Technology, growth management policies, and the changing role of central cities",
+      "Population growth, immigration, and transportation cost",
+      "Zoning, entitlements, and public opinion"],
+    answer:1,
+    why:"Technology, growth management policies, and the changing role of central cities." },
+
+  { id:"ch9", concept:"ch12", type:"mc",
+    q:"The site control dilemma is best stated as:",
+    choices:[
+      "Whether to option or to lease the land",
+      "Tie up the site early for maximum profit but greater risk, or late for less risk and less upside",
+      "Whether the developer or lender holds title during entitlement",
+      "Whether to buy the whole parcel or only the buildable portion"],
+    answer:1,
+    why:"Buy early = more upside, more risk. Buy late = less risk, less upside. That tension is the whole point." },
+
+  { id:"ch10", concept:"ch12", type:"mc",
+    q:"How is the dilemma of controlling the site resolved?",
+    choices:["A right of first refusal","The option to buy land","A joint venture with the landowner","A feasibility contingency in the purchase contract"],
+    answer:1,
+    why:"The option to buy land — control without ownership while feasibility gets tested. This is exactly what 'tie up the land' means in the Stage Two slides." },
+
+  { id:"ch11", concept:"ch12", type:"mc",
+    q:"Once a site's feasibility has been demonstrated, the landowner's price is expected to:",
+    choices:["Stay fixed by the earlier agreement","Go up","Fall, because the developer now has leverage","Be renegotiated by the broker"],
+    answer:1,
+    why:"Go up. That's precisely why the developer wants control BEFORE proving feasibility — it's the engine of the whole dilemma." },
+
+  { id:"ch12", concept:"ch12", type:"mc",
+    q:"Marketing, financial, and construction management all get involved during idea refinement so the developer can:",
+    choices:[
+      "Begin competitive bidding",
+      "Feel confident putting funds at risk in Stage Three",
+      "Satisfy the lender's underwriting checklist",
+      "Release drawings at 90%"],
+    answer:1,
+    why:"So he can feel confident putting funds at risk in Stage Three. He must be convinced of feasibility before spending begins." },
+
+  { id:"ch13", concept:"ch12", type:"mc",
+    q:"The 'fine line' the reading warns the developer about is between:",
+    choices:["Optimism and fraud","Effective communication and shallow promotion","Due diligence and analysis paralysis","Cut and fill"],
+    answer:1,
+    why:"A fine line between effective communication and shallow promotion. Sell the vision without overselling it — a quotable line." },
+
+  { id:"ch14", concept:"ch12", type:"mc",
+    q:"Regarding the public sector, the reading stresses that developers must understand:",
+    choices:[
+      "Only the written zoning ordinance",
+      "The human and organizational sides, plus financial depth and political clout — theirs and their competitors'",
+      "Primarily the permitting fee schedule",
+      "The election calendar for local offices"],
+    answer:1,
+    why:"The human and organizational sides, and both their own and their competitors' financial depth and political clout." },
+
+  { id:"ch15", concept:"ch12", type:"mc",
+    q:"According to the reading's framing sentence, optimal land uses are continually changed by:",
+    choices:["Interest rates and construction cost inflation","Social, cultural, and economic forces","Federal and state regulation","Technology alone"],
+    answer:1,
+    why:"Social, cultural, and economic forces — and the developer must respond to these changes." },
+
+  { id:"ch16", concept:"ch12", type:"mc",
+    q:"The textbook's two outcomes of Stage Two are:",
+    choices:[
+      "Proceed to bidding, or renegotiate the land price",
+      "The idea evolves into a feasible concept, or it is abandoned before large expenditures",
+      "Option the land, or purchase it outright",
+      "A go decision, or a deferral pending market study"],
+    answer:1,
+    why:"Evolve or abandon — the textbook's version of 'a quick and decisive NO.'" },
+
+  { id:"ch17", concept:"ch12", type:"tf",
+    q:"In Stage Two, a site is identified first and the developer then searches for an idea to put on it.",
+    answer:false,
+    why:"Reversed. The IDEA is looking for a site." },
+
+  { id:"ch18", concept:"ch12", type:"tf",
+    q:"Buying land early gives the developer less upside but less risk.",
+    answer:false,
+    why:"Backwards. Buy early = MORE upside and MORE risk." },
+
+  { id:"ch19", concept:"ch12", type:"tf",
+    q:"An option lets the developer control a site without owning it.",
+    answer:true,
+    why:"Exactly — the right to purchase at a fixed price while feasibility is tested." },
+
+  { id:"ch20", concept:"ch12", type:"tf",
+    q:"Residual analysis works forward from land cost to determine what can be built.",
+    answer:false,
+    why:"It runs the other way: from the value of what can be built, minus costs, to what the land is worth." },
+
+  { id:"ch21", concept:"ch12", type:"tf",
+    q:"There are four early urban growth models, and 'edge cities' is the fourth.",
+    answer:false,
+    why:"Edge cities is a later pattern. The fourth model is Multiple Nuclei." },
+
+  { id:"ch22", concept:"ch12", type:"tf",
+    q:"At the concept stage the project exists only in the developer's mind, expressed in a spreadsheet.",
+    answer:true,
+    why:"Correct — that's the book's language." },
+
+  { id:"ch23", concept:"ch12", type:"id",
+    q:"Determining the value of improvements to be constructed, then deducting direct and indirect costs, to arrive at what the land is worth for this project.",
+    answer:"residual analysis", accept:["residual"],
+    hint:"What's left over after you subtract costs from value.",
+    why:"Residual analysis. Land value is derived from what can profitably be built." },
+
+  { id:"ch24", concept:"ch12", type:"id",
+    q:"The device that resolves the site control dilemma by securing the right to purchase at a fixed price while feasibility is tested.",
+    answer:"option to buy land", accept:["option","an option","land option","option to buy","purchase option"],
+    hint:"It's how you 'tie up' a site.",
+    why:"The option to buy land — control without ownership." },
+
+  { id:"ch25", concept:"ch12", type:"id",
+    q:"The later settlement pattern that follows the four classical urban growth models.",
+    answer:"edge cities", accept:["edge city"],
+    why:"Edge cities. Keep it separate from the four models themselves." },
+
+  { id:"ch26", concept:"ch12", type:"id",
+    q:"The growth model named for rings expanding outward from a central point.",
+    answer:"concentric zone theory", accept:["concentric zone","concentric zones","concentric"],
+    why:"Concentric Zone theory — the first of the four." },
+
+  { id:"ch27", concept:"ch12", type:"id",
+    q:"The growth model built on multiple separate centers rather than one core.",
+    answer:"multiple nuclei theory", accept:["multiple nuclei","multiple nucleii"],
+    why:"Multiple Nuclei theory — the fourth model, and the one edge cities is often confused with." },
+
+  { id:"ch28", concept:"ch12", type:"id",
+    q:"The quality the developer must possess regarding the project before Stage Three funds are put at risk.",
+    answer:"convinced of its feasibility", accept:["convinced of feasibility","feasibility","convinced"],
+    hint:"'He must be ___ before putting funds at risk.'",
+    why:"He must be convinced of its feasibility. That's the Stage Three spending gate." },
+
+  { id:"ch29", concept:"ch12", type:"id",
+    q:"The phrase describing the boundary a developer must not cross when selling the vision of a project.",
+    answer:"a fine line between effective communication and shallow promotion",
+    accept:["fine line between effective communication and shallow promotion","effective communication and shallow promotion","shallow promotion"],
+    hint:"A fine line between two things.",
+    why:"'A fine line between effective communication and shallow promotion.'" },
+
+  { id:"ch30", concept:"ch12", type:"multi",
+    q:"Which are among the four early urban growth models? (Several, one, or none may be correct.)",
+    choices:["Concentric Zone theory","Sector theory","Edge cities","Axial theory"],
+    answers:[0,1,3],
+    why:"Concentric Zone, Sector, and Axial are three of the four — Multiple Nuclei is the fourth. Edge cities is a later pattern, not a classical model." },
+
+  // ---------- CHAIN OF COMMAND ----------
+  { id:"k1", concept:"chain", type:"mc",
+    q:"In the chain of command, subcontractors are hired by:",
+    choices:["The developer","The general contractor","The construction lender","The civil engineer"],
+    answer:1,
+    why:"The general contractor. Developer → hires GC → hires subs." },
+
+  { id:"k2", concept:"chain", type:"mc",
+    q:"How many general contractors does the developer hire on a project?",
+    choices:["One","Two, to maintain competitive tension","One per CSI division","As many as there are major trades"],
+    answer:0,
+    why:"Exactly ONE. The GC then hires and manages every sub." },
+
+  { id:"k3", concept:"chain", type:"mc",
+    q:"Equity capital is best characterized as:",
+    choices:[
+      "Repaid with interest, no ownership, paid back first",
+      "Ownership percentage, paid after the lender is repaid, higher risk and higher return",
+      "Ownership percentage, paid before the lender, lower risk",
+      "A loan convertible to ownership at the lender's option"],
+    answer:1,
+    why:"Equity buys ownership and gets paid LAST — after the lender. Higher risk, higher return." },
+
+  { id:"k4", concept:"chain", type:"mc",
+    q:"Which party gets paid back FIRST?",
+    choices:["The equity investor","The bank/lender","The general contractor's retainage","The developer's promoted interest"],
+    answer:1,
+    why:"The lender. Debt gets paid first; equity gets paid last. The cleanest one-liner: equity buys ownership and gets paid last; debt buys nothing and gets paid first." },
+
+  { id:"k5", concept:"chain", type:"mc",
+    q:"The broker's role on a project spans:",
+    choices:[
+      "Only the front end, providing market intelligence",
+      "Only the back end, selling or leasing the finished building",
+      "Market intelligence on the front end, and selling or leasing the finished building",
+      "Negotiating the general contract on the developer's behalf"],
+    answer:2,
+    why:"Both ends — market intel up front, then sale or lease at the finish." },
+
+  { id:"k6", concept:"chain", type:"mc",
+    q:"Which of the following is a subcontractor rather than a direct developer hire?",
+    choices:["The architect","The civil engineer","The site/grading contractor","The attorney"],
+    answer:2,
+    why:"The site/grading contractor is a sub under the GC. The study guide flags this as the most-missed point in the whole chain of command." },
+
+  { id:"k7", concept:"chain", type:"mc",
+    q:"Why is a loan agreement a Stage Five formal commitment?",
+    choices:[
+      "Because debt must be committed before any design work begins",
+      "Because the lender is repaid first and takes no ownership, so the commitment is contractual and binding",
+      "Because lenders require a signed GC contract as a precondition",
+      "Because Stage Five is when the option is exercised"],
+    answer:1,
+    why:"The lender is repaid first and takes no ownership — the relationship is purely contractual, which is what makes it a formal commitment." },
+
+  { id:"k8", concept:"chain", type:"mc",
+    q:"Which best explains why the course front-loads Stages One through Five?",
+    choices:[
+      "They occupy the majority of a project's calendar time",
+      "Nothing is fully committed yet, so that's where the real decision-making lives",
+      "They are the stages a junior analyst is most likely to work on",
+      "Stages Six through Eight are covered in a later course"],
+    answer:1,
+    why:"Nothing is fully committed yet, so that's where the real decision-making lives. Stages 7–8 get light treatment." },
+
+  { id:"k9", concept:"chain", type:"mc",
+    q:"The economic factor identified as most affecting residential development:",
+    choices:["Unemployment","Increased interest rates","Material cost inflation","Household formation rates"],
+    answer:1,
+    why:"Increased interest rates — noted in the 9/21 class. If there's a current-events question, that's the one." },
+
+  { id:"k10", concept:"chain", type:"tf",
+    q:"The developer hires the general contractor, and the general contractor hires the subcontractors.",
+    answer:true,
+    why:"Correct — that's the chain exactly." },
+
+  { id:"k11", concept:"chain", type:"tf",
+    q:"Debt capital receives a percentage of ownership in the project.",
+    answer:false,
+    why:"Debt receives NO ownership — just repayment with interest. Equity receives ownership." },
+
+  { id:"k12", concept:"chain", type:"tf",
+    q:"The equity investor is paid only after the lender has been repaid.",
+    answer:true,
+    why:"Correct. Equity is last in line, which is why it demands a higher return." },
+
+  { id:"k13", concept:"chain", type:"tf",
+    q:"A developer typically hires two general contractors to preserve competitive tension through construction.",
+    answer:false,
+    why:"The developer hires exactly ONE GC." },
+
+  { id:"k14", concept:"chain", type:"tf",
+    q:"The broker's involvement ends once the site is acquired.",
+    answer:false,
+    why:"The broker also sells or leases the finished building — involvement runs to both ends." },
+
+  { id:"k15", concept:"chain", type:"tf",
+    q:"The developer's two responsibilities regarding risk are to identify it and to eliminate it.",
+    answer:false,
+    why:"Identify and QUANTIFY. Risk is never eliminated — it's priced." },
+
+  { id:"k16", concept:"chain", type:"tf",
+    q:"AIA publishes 33 standard forms and CSI has 254 divisions.",
+    answer:false,
+    why:"Reversed — and this is the cheapest point to lose on the exam. AIA publishes 254 forms; CSI has 33 divisions." },
+
+  { id:"k17", concept:"chain", type:"tf",
+    q:"General contractors typically need 4–6 weeks to prepare a bid.",
+    answer:true,
+    why:"4–6 weeks. Worth having cold." },
+
+  { id:"k18", concept:"chain", type:"tf",
+    q:"A preliminary civil engineer site layout costs roughly $2,000.",
+    answer:true,
+    why:"About $2,000 — cheap relative to what it de-risks." },
+
+  { id:"k19", concept:"chain", type:"id",
+    q:"Capital that is repaid with interest, receives no ownership, and is paid back before equity.",
+    answer:"debt capital", accept:["debt","debt financing","bank financing","loan","lender financing"],
+    why:"Debt capital. Buys nothing, gets paid first." },
+
+  { id:"k20", concept:"chain", type:"id",
+    q:"The party hired directly by the developer to deliver the building, who in turn hires and manages all trades.",
+    answer:"general contractor", accept:["gc","the general contractor","gen contractor"],
+    why:"The General Contractor — the single direct hire in the chain." },
+
+  { id:"k21", concept:"chain", type:"id",
+    q:"The team member who provides market intelligence on the front end and sells or leases the finished building.",
+    answer:"broker", accept:["the broker","real estate broker"],
+    why:"The broker — involved at both ends of the project." },
+
+  { id:"k22", concept:"chain", type:"id",
+    q:"The subcontractor most commonly mistaken for a direct developer hire.",
+    answer:"site grading contractor", accept:["site contractor","grading contractor","site/grading contractor","site and grading contractor"],
+    hint:"It's the one that moves dirt.",
+    why:"The site/grading contractor — a sub under the GC. The most-missed point in the chain of command." },
+
+  { id:"k23", concept:"chain", type:"id",
+    q:"Capital provided in exchange for a percentage of ownership, paid only after the lender is repaid.",
+    answer:"equity capital", accept:["equity","equity investment","equity investor"],
+    why:"Equity capital. Buys ownership, gets paid last, demands the higher return." },
+
+  { id:"k24", concept:"chain", type:"num",
+    q:"How many standard forms does AIA publish?",
+    answer:254, tolerance:0,
+    hint:"It's the bigger of the two numbers — CSI has the smaller one.",
+    why:"254 AIA forms. CSI has 33 divisions. Reversing these two is the classic cheap miss." },
+
+  { id:"k25", concept:"chain", type:"num",
+    q:"How many divisions are in the CSI Standard Scope of Work?",
+    answer:33, tolerance:0,
+    hint:"The smaller of the two numbers.",
+    why:"33 CSI divisions. AIA publishes 254 forms." },
+
+  { id:"k26", concept:"chain", type:"multi",
+    q:"Which of these are hired DIRECTLY by the developer? (Several, one, or none may be correct.)",
+    choices:["The general contractor","The site/grading contractor","The architect","The framing subcontractor"],
+    answers:[0,2],
+    why:"The GC and the architect are direct developer hires. The site/grading contractor and the framers are subs under the GC." },
+
+  { id:"k27", concept:"chain", type:"multi",
+    q:"Which statements about equity are correct? (Several, one, or none may be correct.)",
+    choices:[
+      "It receives a percentage of ownership",
+      "It is paid after the lender is repaid",
+      "It carries higher risk and higher return",
+      "It is repaid with interest on a fixed schedule"],
+    answers:[0,1,2],
+    why:"The first three. Repayment with interest on a fixed schedule describes debt, not equity." },
+
+  { id:"k28", concept:"chain", type:"id",
+    q:"The three functions that join together at feasibility.",
+    answer:"marketing financial construction management",
+    accept:["marketing financial and construction management","marketing finance construction management","marketing financial construction"],
+    hint:"Three departments — one sells it, one funds it, one builds it.",
+    why:"Marketing, financial, and construction management." },
+
+  { id:"k29", concept:"chain", type:"mc",
+    q:"Which career point did the professor NOT make in the 9/21 professional development class?",
+    choices:[
+      "Hustle and prep always wins over intellect",
+      "A career doesn't have to be linear",
+      "Specialize early and stay in your lane",
+      "Be a 'yes' person"],
+    answer:2,
+    why:"'Specialize early' is invented — the opposite of 'a career doesn't have to be linear.' The five were: build your network, hustle beats intellect, build your personal brand daily, careers aren't linear, be a 'yes' person." },
+
+  { id:"k30", concept:"chain", type:"mc",
+    q:"The evergreen warning the professor closed with:",
+    choices:[
+      "Trust but verify",
+      "If it seems too good to be true, it probably is",
+      "Measure twice, cut once",
+      "Never fall in love with a deal"],
+    answer:1,
+    why:"'If it seems too good to be true, it probably is.' Pairs naturally with 'don't judge a book by its cover — it's a FOOL'S GAME.'" }
 ];

@@ -73,10 +73,11 @@
   .opt.right .box { background:var(--good); border-color:var(--good); }
   .opt.wrong .box { background:var(--bad); border-color:var(--bad); }
 
-  input[type=number] { width:100%; padding:13px 14px; font-size:19px; font-weight:600;
+  input[type=number], input[type=text] { width:100%; padding:13px 14px; font-size:19px; font-weight:600;
     background:var(--card2); border:1.5px solid var(--line); border-radius:9px;
     color:var(--text); font-family:inherit; }
-  input[type=number]:focus { outline:none; border-color:var(--accent); }
+  input[type=text] { font-size:17px; }
+  input[type=number]:focus, input[type=text]:focus { outline:none; border-color:var(--accent); }
   input.right { border-color:var(--good); } input.wrong { border-color:var(--bad); }
 
   button { font-family:inherit; font-size:15px; font-weight:650; padding:13px 20px;
@@ -230,10 +231,24 @@ function pick(){
 }
 
 /* ---------------- grading ---------------- */
+/* Loose text match for identification answers: case, punctuation, articles,
+   and surrounding whitespace are all ignored so a right answer typed casually
+   still counts. q.accept lists alternate phrasings. */
+function normId(s){
+  return String(s).toLowerCase()
+    .replace(/[^a-z0-9 ]+/g, " ")
+    .replace(/\b(the|a|an|of|and)\b/g, " ")
+    .replace(/\s+/g, " ").trim();
+}
 function grade(q, ans){
   if(q.type==="mc")   return ans === q.answer;
   if(q.type==="tf")   return ans === q.answer;
   if(q.type==="num")  return Math.abs(ans - q.answer) <= (q.tolerance||0);
+  if(q.type==="id"){
+    const got = normId(ans||"");
+    if(!got) return false;
+    return [q.answer, ...(q.accept||[])].some(a => normId(a) === got);
+  }
   if(q.type==="multi"){
     const a=[...ans].sort((x,y)=>x-y), b=[...q.answers].sort((x,y)=>x-y);
     return a.length===b.length && a.every((v,i)=>v===b[i]);
@@ -281,10 +296,10 @@ function render(){
 
 /* ---------- practice ---------- */
 function renderQuiz(){
-  if(!cur){ cur = pick(); sel = (cur.type==="multi") ? [] : null; locked=false; showHint=false; }
+  if(!cur){ cur = pick(); sel = (cur.type==="multi") ? [] : (cur.type==="id") ? "" : null; locked=false; showHint=false; }
   const q = cur, r = rec(q.id);
   const acc = S.total ? Math.round(S.correct/S.total*100) : 0;
-  const tl = { mc:"Multiple choice", multi:"Select all that apply", tf:"True / False", num:"Calculate" }[q.type];
+  const tl = { mc:"Multiple choice", multi:"Select all that apply", tf:"True / False", num:"Calculate", id:"Identification" }[q.type];
 
   let h = `<div class="prog">
       <span>${S.total} answered · ${acc}% correct</span>
@@ -297,6 +312,11 @@ function renderQuiz(){
   if(q.type === "num"){
     h += `<input type="number" id="na" placeholder="Your answer" inputmode="decimal"
             ${locked?"disabled":""} value="${sel!==null&&sel!==undefined?sel:""}">`;
+    if(showHint && !locked && q.hint) h += `<div class="hint">💡 ${esc(q.hint)}</div>`;
+  } else if(q.type === "id"){
+    h += `<input type="text" id="ta" placeholder="Type the term" autocomplete="off"
+            autocapitalize="off" spellcheck="false"
+            ${locked?"disabled":""} value="${esc(sel||"")}">`;
     if(showHint && !locked && q.hint) h += `<div class="hint">💡 ${esc(q.hint)}</div>`;
   } else {
     const opts = q.type==="tf" ? ["True","False"] : q.choices;
@@ -322,13 +342,14 @@ function renderQuiz(){
   if(!locked){
     h += `<div class="row">
         <button id="sub">Check answer</button>
-        ${q.type==="num" && q.hint ? `<button class="ghost" id="hint" style="flex:0 0 auto">Hint</button>`:""}
+        ${(q.type==="num"||q.type==="id") && q.hint ? `<button class="ghost" id="hint" style="flex:0 0 auto">Hint</button>`:""}
       </div>`;
   } else {
     const ok = grade(q, sel);
     h += `<div class="fb ${ok?"ok":"no"}">
         <b>${ok ? "Correct" : "Not quite"}</b>
         ${!ok && q.type==="num" ? `The answer is <b style="display:inline">${q.answer.toLocaleString()}</b>. ` : ""}
+        ${!ok && q.type==="id" ? `The answer is <b style="display:inline">${esc(q.answer)}</b>. ` : ""}
         ${esc(q.why)}</div>
       <button class="wide" id="next">Next question →</button>`;
     if(r.n > 1) h += `<div class="mini">You've seen this one ${r.n} times — ${r.c} right.</div>`;
@@ -357,6 +378,11 @@ function renderQuiz(){
     el("na").onkeydown = e => { if(e.key==="Enter") submit(); };
     if(!locked) el("na").focus();
   }
+  if(el("ta")){
+    el("ta").oninput = e => sel = e.target.value;
+    el("ta").onkeydown = e => { if(e.key==="Enter") submit(); };
+    if(!locked) el("ta").focus();
+  }
   el("reset").onclick = e => {
     e.preventDefault();
     if(confirm("Erase all progress and start over?")){
@@ -367,6 +393,7 @@ function renderQuiz(){
 
 function submit(){
   if(cur.type === "multi"){ if(!sel.length) return; }
+  else if(cur.type === "id"){ if(!sel || !String(sel).trim()) return; }
   else if(sel === null || sel === undefined || (typeof sel==="number" && isNaN(sel))) return;
   locked = true;
   record(cur, grade(cur, sel));
