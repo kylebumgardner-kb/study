@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#14203a">
+<title>Read the Source First — Social Studies Trainer</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  :root {
+    --bg:#14203a; --card:#1d2b48; --card2:#263657; --line:#35466b;
+    --text:#eef2f8; --dim:#b9c4d8; --accent:#4d8fe8; --good:#43c98a;
+    --bad:#ef6a74; --warn:#f0c04a; --stim:#223457; --slate:#7e8ca6;
+  }
+  html,body { margin:0; padding:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; line-height:1.5; }
+  .wrap { max-width:720px; margin:0 auto; padding:16px 16px 60px; }
+  header { padding:4px 0 14px; border-bottom:1px solid var(--line); margin-bottom:16px; }
+  h1 { font-size:17px; margin:0; font-weight:650; letter-spacing:-.2px; }
+  .sub { font-size:12.5px; color:var(--dim); margin-top:3px; }
+
+  .tabs { display:flex; gap:6px; margin-bottom:16px; }
+  .tab { flex:1; padding:9px 4px; text-align:center; font-size:13px; font-weight:600;
+    background:var(--card); border:1px solid var(--line); border-radius:8px;
+    cursor:pointer; color:var(--dim); user-select:none; }
+  .tab.on { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+  .card { background:var(--card); border:1px solid var(--line);
+    border-radius:12px; padding:18px; margin-bottom:14px; }
+  .ctag { display:inline-block; font-size:11px; font-weight:700; letter-spacing:.4px;
+    text-transform:uppercase; color:var(--accent); background:rgba(77,143,232,.14);
+    padding:3px 9px; border-radius:20px; margin-bottom:12px; }
+
+  /* ---------- stimulus ---------- */
+  .stim { background:var(--stim); border:1px solid var(--line); border-left:3px solid var(--accent);
+    border-radius:9px; padding:14px 15px; margin:0 0 16px; }
+  .stim-t { font-size:13.5px; font-weight:700; margin-bottom:10px; letter-spacing:-.1px; }
+  .stim-note { font-size:12.5px; color:var(--dim); margin-top:10px; font-style:italic; line-height:1.55; }
+
+  table.tl { width:100%; border-collapse:collapse; font-size:13.5px; }
+  table.tl td { padding:5px 8px 5px 0; vertical-align:top; border-bottom:1px solid rgba(255,255,255,.055); }
+  table.tl td.yr { font-weight:700; color:var(--warn); white-space:nowrap; width:1%; padding-right:14px; }
+
+  table.gt { width:100%; border-collapse:collapse; font-size:13px; }
+  table.gt th { text-align:left; padding:6px 8px; background:rgba(255,255,255,.055);
+    font-size:11.5px; text-transform:uppercase; letter-spacing:.4px; color:var(--dim); }
+  table.gt td { padding:7px 8px; border-bottom:1px solid rgba(255,255,255,.055); vertical-align:top; }
+  table.gt tr:last-child td { border-bottom:none; }
+
+  .bar-row { margin-bottom:9px; }
+  .bar-lab { display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:3px; }
+  .bar-lab b { font-weight:700; color:var(--warn); }
+  .bar-track { height:15px; background:rgba(0,0,0,.3); border-radius:4px; overflow:hidden; }
+  .bar-fill { height:100%; background:var(--accent); border-radius:4px; }
+  .unit { font-size:11.5px; color:var(--slate); text-transform:uppercase;
+    letter-spacing:.5px; margin-bottom:9px; font-weight:600; }
+
+  .qt { font-size:14.5px; line-height:1.6; font-style:italic; }
+  .qt-src { font-size:12px; color:var(--dim); margin-top:9px; font-style:normal; font-weight:600; }
+
+  .leg { display:flex; align-items:center; gap:9px; font-size:12.5px; margin-bottom:5px; }
+  .sw { width:15px; height:15px; border-radius:3px; flex:none; border:1px solid rgba(255,255,255,.2); }
+
+  .cart-d { font-size:13.5px; line-height:1.6; }
+  .cart-s { margin-top:11px; padding-top:10px; border-top:1px solid rgba(255,255,255,.08); }
+  .cart-s .leg { align-items:flex-start; }
+  .cart-s b { color:var(--warn); }
+
+  /* ---------- questions ---------- */
+  .step { font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase;
+    color:var(--warn); margin-bottom:7px; }
+  .q { font-size:16px; font-weight:550; margin:0 0 15px; line-height:1.5; }
+  .opt { display:flex; align-items:flex-start; gap:11px; padding:12px 14px;
+    background:var(--card2); border:1px solid var(--line); border-radius:9px;
+    margin-bottom:8px; cursor:pointer; font-size:14.5px; line-height:1.45; }
+  .opt:active { transform:scale(.995); }
+  .opt .ltr { font-weight:800; color:var(--dim); flex:none; width:16px; }
+  .opt.sel { border-color:var(--accent); background:rgba(77,143,232,.14); }
+  .opt.right { border-color:var(--good); background:rgba(67,201,138,.15); }
+  .opt.wrong { border-color:var(--bad); background:rgba(239,106,116,.14); }
+  .opt.lock { opacity:.55; cursor:default; }
+
+  .fb { padding:13px 15px; border-radius:9px; font-size:14px; line-height:1.6;
+    margin:4px 0 12px; border:1px solid; }
+  .fb.ok { background:rgba(67,201,138,.11); border-color:rgba(67,201,138,.4); }
+  .fb.no { background:rgba(239,106,116,.1); border-color:rgba(239,106,116,.4); }
+  .fb b { display:block; margin-bottom:4px; font-size:12px; text-transform:uppercase; letter-spacing:.6px; }
+
+  .btn { display:block; width:100%; padding:13px; font-size:15px; font-weight:650;
+    background:var(--accent); color:#fff; border:none; border-radius:9px;
+    cursor:pointer; margin-top:4px; font-family:inherit; }
+  .btn.ghost { background:transparent; border:1px solid var(--line); color:var(--dim); }
+  .btn:active { opacity:.85; }
+
+  .meta { display:flex; justify-content:space-between; font-size:12px;
+    color:var(--dim); margin-bottom:14px; padding:0 2px; }
+
+  .mrow { margin-bottom:15px; }
+  .mlab { display:flex; justify-content:space-between; font-size:13.5px; margin-bottom:5px; }
+  .mlab b { font-weight:650; } .mlab span { color:var(--dim); font-size:12.5px; }
+  .mtrack { height:9px; background:rgba(0,0,0,.3); border-radius:5px; overflow:hidden; }
+  .mfill { height:100%; border-radius:5px; }
+  .mblurb { font-size:12px; color:var(--slate); margin-top:4px; line-height:1.5; }
+  .banner { background:rgba(240,192,74,.12); border:1px solid rgba(240,192,74,.4);
+    border-radius:9px; padding:13px 15px; font-size:13.5px; margin-bottom:16px; line-height:1.55; }
+
+  .hab { font-size:14px; line-height:1.65; }
+  .hab h3 { font-size:13.5px; margin:16px 0 7px; color:var(--accent);
+    text-transform:uppercase; letter-spacing:.5px; }
+  .hab h3:first-child { margin-top:0; }
+  .hab ol { margin:0; padding-left:21px; } .hab li { margin-bottom:8px; }
+  .hab .kw { color:var(--warn); font-weight:700; }
+  footer.colo { margin-top:22px; padding-top:14px; border-top:1px solid var(--line);
+    font-size:11.5px; color:var(--slate); line-height:1.6; }
+  .nojs { background:rgba(240,192,74,.14); border:1px solid rgba(240,192,74,.5);
+    border-radius:9px; padding:15px; font-size:14px; line-height:1.6; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Read the Source First</h1>
+    <div class="sub">Social Studies &middot; timelines, charts, graphs, quotes, maps, cartoons</div>
+  </header>
+
+  <div class="tabs">
+    <div class="tab on" data-v="practice">Practice</div>
+    <div class="tab" data-v="mastery">Mastery</div>
+    <div class="tab" data-v="habit">The Method</div>
+  </div>
+
+  <div id="view">
+    <div class="nojs">
+      <b>This preview can&rsquo;t run the trainer.</b><br>
+      Chat apps show the page but don&rsquo;t run its code. Save this file to Files or Downloads,
+      then open it in Safari or Chrome and it&rsquo;ll work.
+    </div>
+  </div>
+
+  <footer class="colo">
+    Every question makes you read the source before the answer choices unlock &mdash; that&rsquo;s the
+    whole point. Progress saves on this device only.
+  </footer>
+</div>
+
+<script>
+// Stimulus Mining Trainer — question bank
+// Built 2026-10-20 for Max (8th grade, NC Social Studies / Mr. Sutton).
+//
+// WHY THIS EXISTS: on his October test Max missed #17 and #22 not from lacking
+// content knowledge but from jumping to the answer choices without reading the
+// timeline/chart/quote first. Three of his misses were sitting right in the stimulus.
+// So every item here has a stimulus and a FORCED FIRST STEP: he must answer a
+// "what does the source actually show?" question before the choices unlock.
+//
+// Content is NC 8th-grade aligned (colonial era through Reconstruction) and all
+// stimulus data is real. Questions are written in released-EOG style.
+
+const CONCEPTS = {
+  timeline:  { name: "Timelines",        blurb: "Read the span, count the entries, check the order before you answer." },
+  chart:     { name: "Charts & Tables",  blurb: "Find the row and column the question is actually asking about." },
+  graph:     { name: "Graphs",           blurb: "Check the axis labels and units first — they're where the trick lives." },
+  quote:     { name: "Quotes",           blurb: "Who is speaking, and what do they literally say? Not what you assume." },
+  map:       { name: "Maps",             blurb: "Use the legend and the compass. The answer is in the key." },
+  cartoon:   { name: "Political Cartoons", blurb: "Identify every symbol and label, then ask what the artist thinks." },
+  trap:      { name: "Trap Questions",   blurb: "EXCEPT, NOT, BEST, MAIN — the question word changes everything." }
+};
+
+// type: "mc" (one answer) | "multi" (several correct) | "order" (not used yet)
+// Every question has:
+//   stim      — the stimulus object rendered above the question
+//   probe     — the gate: must be answered before choices unlock
+//   q/choices/answer/why — the real question
+//
+// stim.kind: "timeline" | "table" | "bars" | "quote" | "map" | "cartoon"
+
+const QUESTIONS = [
+
+// ============================================================
+// TIMELINES — the category that cost him #15 and #21
+// ============================================================
+
+{ id:"t1", concept:"timeline",
+  stim:{ kind:"timeline", title:"Settlement of the Thirteen Colonies",
+    rows:[ ["1607","Virginia"], ["1620","Massachusetts"], ["1623","New Hampshire"],
+           ["1626","New York"], ["1633","Connecticut"], ["1634","Maryland"],
+           ["1636","Rhode Island"], ["1638","Delaware"], ["1653","North Carolina"],
+           ["1664","New Jersey"], ["1670","South Carolina"], ["1681","Pennsylvania"],
+           ["1733","Georgia"] ] },
+  probe:{ q:"Before you look at any answer choices: how many colonies are listed on this timeline?",
+    choices:["11","12","13","14"], answer:2,
+    why:"13. Counting first means you can test each answer choice against a real number instead of guessing." },
+  q:"During what time period were MOST of the thirteen colonies first settled?",
+  choices:["1607–1620","1623–1633","1607–1670","1681–1733"], answer:2,
+  why:"1607–1670 contains 11 of the 13 — that's 'most.' 1623–1633 only holds New Hampshire, New York and Connecticut. This is the exact question you got marked wrong on, and your answer was the better one. 'Most' means more than half, so count before you pick." },
+
+{ id:"t2", concept:"timeline",
+  stim:{ kind:"timeline", title:"Settlers and American Indian Land in Virginia",
+    rows:[ ["1607","English settlers arrive at Jamestown on Powhatan land"],
+           ["1614","Settlers begin planting tobacco, clearing more land"],
+           ["1622","Powhatan attack settlements expanding onto their land"],
+           ["1644","Settlers still occupying American Indian land; second conflict"],
+           ["1646","Treaty forces Powhatan to give up most remaining land"] ] },
+  probe:{ q:"First: according to this timeline, who was on the land in 1607, and who arrived?",
+    choices:["Settlers were there; American Indians arrived","American Indians were there; settlers arrived",
+             "Both arrived at the same time","The timeline doesn't say"], answer:1,
+    why:"The 1607 entry says settlers ARRIVE on Powhatan land — meaning the Powhatan were already there. Everything after follows from that one fact." },
+  q:"Which statement is BEST supported by the timeline?",
+  choices:["Settlers and American Indians shared the land peacefully",
+           "American Indians took land that the settlers discovered",
+           "American Indians invited settlers to farm their land",
+           "The settlers tried to take the American Indians' land"], answer:3,
+  why:"The timeline shows settlers arriving on land that was already Powhatan, then expanding onto more of it. Nothing in it supports the reverse. If a choice contradicts the dates in front of you, it's wrong no matter how it's worded." },
+
+{ id:"t3", concept:"timeline",
+  stim:{ kind:"timeline", title:"Road to Revolution",
+    rows:[ ["1754","French and Indian War begins"], ["1763","War ends; Proclamation of 1763"],
+           ["1765","Stamp Act"], ["1767","Townshend Acts"], ["1770","Boston Massacre"],
+           ["1773","Tea Act; Boston Tea Party"], ["1774","Intolerable Acts"],
+           ["1775","Fighting begins at Lexington and Concord"] ] },
+  probe:{ q:"First: which events on this timeline happened BEFORE 1763?",
+    choices:["The Stamp Act only","The Boston Massacre only","All of the taxes","The French and Indian War only"], answer:3,
+    why:"Only the French and Indian War (1754) starts before 1763. Scanning the dates first makes date-based questions almost free." },
+  q:"Which event on the timeline occurred BEFORE 1763?",
+  choices:["Boston Massacre","French and Indian War","Stamp Act","Boston Tea Party"], answer:1,
+  why:"French and Indian War, 1754. This is your missed #7. The Boston Massacre feels like an early colonial conflict, but it's 1770 — check the date column instead of going on vibes." },
+
+{ id:"t4", concept:"timeline",
+  stim:{ kind:"timeline", title:"Expanding Voting Rights",
+    rows:[ ["1789","Only white male property owners can vote in most states"],
+           ["1856","Last property requirements for white men removed"],
+           ["1870","15th Amendment — race cannot bar voting"],
+           ["1920","19th Amendment — sex cannot bar voting"],
+           ["1924","Indian Citizenship Act"], ["1965","Voting Rights Act"] ] },
+  probe:{ q:"First: how many years pass between the 15th Amendment and the 19th Amendment?",
+    choices:["30 years","40 years","50 years","60 years"], answer:2,
+    why:"1920 − 1870 = 50 years. Doing the subtraction before reading the choices stops you from picking a number that just looks reasonable." },
+  q:"The timeline BEST supports which conclusion?",
+  choices:["Voting rights in the United States expanded gradually over time",
+           "All Americans gained the right to vote at the same time",
+           "Voting rights were taken away during the 1900s",
+           "Only the Constitution's original text determined voting rights"], answer:0,
+  why:"Six entries spread across 176 years, each widening who may vote — that's gradual expansion. When every row points the same direction, the answer is the one describing that direction." },
+
+// ============================================================
+// CHARTS & TABLES
+// ============================================================
+
+{ id:"c1", concept:"chart",
+  stim:{ kind:"table", title:"Colonial Regions, about 1750",
+    head:["Region","Main economy","Largest port"],
+    rows:[ ["New England","Shipbuilding, fishing, small farms","Boston"],
+           ["Middle Colonies","Wheat and grain ('breadbasket')","Philadelphia"],
+           ["Southern Colonies","Tobacco and rice plantations","Charleston"] ] },
+  probe:{ q:"First: which column would you look in to answer a question about how a region made money?",
+    choices:["Region","Largest port","Main economy","None of them"], answer:2,
+    why:"'Main economy' — matching the question to the right column is the whole skill. Most chart misses are reading the wrong column." },
+  q:"Based on the table, which region's economy depended MOST on enslaved labor?",
+  choices:["New England","Middle Colonies","Southern Colonies","All equally"], answer:2,
+  why:"Tobacco and rice plantations — plantation agriculture was the labor-intensive system that relied on enslaved people. The table doesn't use the word 'enslaved,' so you have to connect 'plantations' to what you know. That's a chart question plus one step." },
+
+{ id:"c2", concept:"chart",
+  stim:{ kind:"table", title:"Population of Selected Colonies, 1750",
+    head:["Colony","Population","Enslaved population"],
+    rows:[ ["Virginia","231,000","101,000"], ["Massachusetts","188,000","4,000"],
+           ["South Carolina","64,000","39,000"], ["Pennsylvania","120,000","2,800"] ] },
+  probe:{ q:"First: in which colony were enslaved people the LARGEST SHARE of the total population?",
+    choices:["Virginia","Massachusetts","South Carolina","Pennsylvania"], answer:2,
+    why:"South Carolina: 39,000 of 64,000 is about 61% — a clear majority. Virginia's 101,000 is a bigger NUMBER but only ~44%. 'Largest share' means do the division; 'largest number' means just read. Different questions." },
+  q:"Which conclusion is BEST supported by the table?",
+  choices:["Slavery was most central to the economies of the southern colonies",
+           "Massachusetts had no enslaved people",
+           "Virginia had the highest percentage of enslaved people",
+           "Pennsylvania's economy depended on enslaved labor"], answer:0,
+  why:"Virginia and South Carolina show far higher shares than Massachusetts or Pennsylvania. 'Massachusetts had no enslaved people' is false — the table says 4,000. 'Virginia had the highest percentage' confuses a big number with a big share. 'Pennsylvania depended on enslaved labor' contradicts 2,800 out of 120,000. Every wrong answer here is a misread of the table." },
+
+{ id:"c3", concept:"chart",
+  stim:{ kind:"table", title:"Articles of Confederation vs. the Constitution",
+    head:["Power","Articles of Confederation","Constitution"],
+    rows:[ ["Collect taxes","No","Yes"], ["Regulate trade","No","Yes"],
+           ["Raise an army","Ask states","Yes"], ["Chief executive","None","President"],
+           ["Amend the document","All 13 must agree","3/4 of states"] ] },
+  probe:{ q:"First: reading only the middle column — what is the pattern in what the national government could do?",
+    choices:["It had most powers","It had the same powers as later","The column is blank","It had very few powers"], answer:3,
+    why:"Four of five rows are 'No' or 'None.' Reading one column top-to-bottom and naming the pattern is the fastest way into a comparison table." },
+  q:"The table BEST shows that the Constitution was written to —",
+  choices:["weaken the national government","create a stronger national government",
+           "give all power to the states","remove the power to tax"], answer:1,
+  why:"Every row moves from 'No' to 'Yes.' The table is one long argument that the Articles left the national government too weak. Name the pattern, then pick the choice that matches it." },
+
+// ============================================================
+// GRAPHS
+// ============================================================
+
+{ id:"g1", concept:"graph",
+  stim:{ kind:"bars", title:"Enslaved Population in the United States",
+    unit:"people (millions)",
+    rows:[ ["1790","0.7",0.7], ["1810","1.2",1.2], ["1830","2.0",2.0],
+           ["1850","3.2",3.2], ["1860","4.0",4.0] ], max:4.0 },
+  probe:{ q:"First: what do the numbers on this graph measure?",
+    choices:["Millions of people","Thousands of dollars","Percent of the population","Number of states"], answer:0,
+    why:"Millions of people — it says so in the unit label. Reading the axis label first is the single highest-value habit on graph questions." },
+  q:"Which statement BEST describes the trend shown?",
+  choices:["The enslaved population fell steadily after 1790",
+           "The enslaved population grew steadily from 1790 to 1860",
+           "The enslaved population stayed about the same",
+           "The enslaved population peaked in 1830"], answer:1,
+  why:"0.7 → 4.0 million, rising at every single point. Check the first value against the last value and you've got the trend in five seconds." },
+
+{ id:"g2", concept:"graph",
+  stim:{ kind:"bars", title:"Miles of Railroad Track, 1850 vs. 1860",
+    unit:"miles of track",
+    rows:[ ["North 1850","6,000",6000], ["North 1860","22,000",22000],
+           ["South 1850","2,000",2000], ["South 1860","9,000",9000] ], max:22000 },
+  probe:{ q:"First: in 1860, roughly how many times more track did the North have than the South?",
+    choices:["About the same","About 1.5 times","About 2.5 times","About 10 times"], answer:2,
+    why:"22,000 ÷ 9,000 ≈ 2.4, so about 2.5 times. Doing the rough math first means you can rule out 'about the same' and 'ten times' instantly." },
+  q:"The graph BEST supports which conclusion about the North before the Civil War?",
+  choices:["The North was more industrial and better connected than the South",
+           "The South had no railroads","The North and South were equally industrial",
+           "Railroads were unimportant to the economy"], answer:0,
+  why:"More track in both years and faster growth means a more developed industrial transportation network. Note that the South grew too — 'the South had no railroads' contradicts the graph. Watch for absolute words like 'no' and 'all.'" },
+
+// ============================================================
+// QUOTES
+// ============================================================
+
+{ id:"q1", concept:"quote",
+  stim:{ kind:"quote", title:"Declaration of Independence, 1776", source:"Thomas Jefferson",
+    text:"We hold these truths to be self-evident, that all men are created equal, that they are endowed by their Creator with certain unalienable Rights, that among these are Life, Liberty and the pursuit of Happiness." },
+  probe:{ q:"First: what does this passage say people's rights come FROM?",
+    choices:["The king","The government","Their Creator","Written laws"], answer:2,
+    why:"'endowed by their Creator.' The question will usually hinge on one specific phrase — find it before you look at the choices." },
+  q:"The idea that rights come from a Creator rather than a government supports the conclusion that —",
+  choices:["only the king can grant rights","rights apply only to citizens",
+           "government cannot legitimately take those rights away",
+           "rights must be earned through service"], answer:2,
+  why:"If a government didn't give the rights, it has no standing to remove them — that's the whole argument for breaking from Britain. The quote hands you the reasoning; you just follow it one step." },
+
+{ id:"q2", concept:"quote",
+  stim:{ kind:"quote", title:"Speech to the Virginia Convention, 1775", source:"Patrick Henry",
+    text:"Is life so dear, or peace so sweet, as to be purchased at the price of chains and slavery? Forbid it, Almighty God! I know not what course others may take; but as for me, give me liberty or give me death!" },
+  probe:{ q:"First: is the speaker arguing FOR war with Britain, or AGAINST it?",
+    choices:["For war","Against war","He is undecided","He is discussing taxes"], answer:0,
+    why:"'Give me liberty or give me death' is a call to fight. Settle the speaker's position before anything else — it eliminates half the choices." },
+  q:"Patrick Henry uses the words 'chains and slavery' to describe —",
+  choices:["the system of enslaved labor in Virginia","British control over the colonies",
+           "conditions aboard British ships","debt owed to British merchants"], answer:1,
+  why:"He's using it as a metaphor for colonial subjection to Britain — an argument many pointed out he made while himself enslaving people. The question asks what the words describe IN THE SPEECH, not what they could mean elsewhere." },
+
+{ id:"q3", concept:"quote",
+  stim:{ kind:"quote", title:"Letter to John Adams, 1776", source:"Abigail Adams",
+    text:"I desire you would remember the ladies, and be more generous and favorable to them than your ancestors. Do not put such unlimited power into the hands of the husbands. Remember all men would be tyrants if they could." },
+  probe:{ q:"First: who is she writing to, and what is she asking him to do?",
+    choices:["To Congress, asking for soldiers","To the king, asking for peace",
+             "To a newspaper, asking for support",
+             "To her husband, asking him to protect women's rights in new laws"], answer:3,
+    why:"It's a letter to John Adams, who was helping write the new government's framework. Knowing the audience and the ask frames every answer choice." },
+  q:"Abigail Adams's letter BEST reflects which idea about the new American government?",
+  choices:["Women should be allowed to serve in the army",
+           "The colonies should remain under British rule",
+           "Only property owners should hold power",
+           "The new nation's promises of liberty should extend to women"], answer:3,
+  why:"She's applying the Revolution's own liberty argument to women. When a quote asks for something to be extended to a new group, that's the answer — not a specific policy she never mentions." },
+
+// ============================================================
+// MAPS
+// ============================================================
+
+{ id:"m1", concept:"map",
+  stim:{ kind:"map", title:"The Missouri Compromise, 1820",
+    legend:[ ["#5b8dee","Free states and territories"], ["#d98c5f","Slave states and territories"],
+             ["#efc75f","36°30' line"] ],
+    note:"Missouri enters as a slave state. Maine enters as a free state. Slavery is banned in the rest of the Louisiana Purchase north of 36°30'." },
+  probe:{ q:"First: according to the legend and note, what does the 36°30' line do?",
+    choices:["Marks the national border","Shows a major river",
+             "Divides where slavery is allowed in new territories",
+             "Marks the route of a railroad"], answer:2,
+    why:"The note spells it out: slavery banned north of that line in the Louisiana Purchase. On a map question, read the legend and any note before looking at the map itself." },
+  q:"The Missouri Compromise was designed MAINLY to —",
+  choices:["end slavery in the United States","open the West to railroads",
+           "give more power to the president",
+           "keep the balance between free and slave states"], answer:3,
+  why:"One slave state in, one free state in — that's balance in the Senate. The note gives you the mechanism; the question just asks you to name its purpose." },
+
+{ id:"m2", concept:"map",
+  stim:{ kind:"map", title:"United States Expansion to 1853",
+    legend:[ ["#9b8ec4","Original states, 1783"], ["#5b8dee","Louisiana Purchase, 1803"],
+             ["#6fbf8b","Florida, 1819"], ["#d98c5f","Texas Annexation, 1845"],
+             ["#efc75f","Oregon Country, 1846"], ["#c97b9e","Mexican Cession, 1848"] ],
+    note:"Each shaded region is labeled with the year it was added to the United States." },
+  probe:{ q:"First: using the legend only — which addition came EARLIEST?",
+    choices:["Louisiana Purchase","Florida","Texas Annexation","Oregon Country"], answer:0,
+    why:"Louisiana Purchase, 1803. The legend is a timeline in disguise; put it in order and sequencing questions answer themselves." },
+  q:"Which generalization is BEST supported by the map?",
+  choices:["The United States expanded westward across the continent during the 1800s",
+           "The United States gained all its land through purchase",
+           "The United States lost territory during the 1800s",
+           "Expansion was complete by 1803"], answer:0,
+  why:"Six regions added between 1783 and 1853, moving west. 'All its land through purchase' is wrong because annexation and cession aren't purchases, and the legend names both. Check each choice against the legend rather than against your general sense of the era." },
+
+// ============================================================
+// POLITICAL CARTOONS
+// ============================================================
+
+{ id:"p1", concept:"cartoon",
+  stim:{ kind:"cartoon", title:"'Join, or Die' — Benjamin Franklin, 1754",
+    describe:"A snake cut into eight separate pieces. Each segment is labeled with initials of a colony or region: N.E., N.Y., N.J., P., M., V., N.C., S.C. Below the snake are the words JOIN, or DIE.",
+    symbols:[ ["The severed snake","The colonies, divided"], ["Eight labeled segments","Individual colonies and regions"],
+              ["'JOIN, or DIE'","A warning that division means destruction"] ] },
+  probe:{ q:"First: what are the eight pieces of the snake labeled as?",
+    choices:["European countries","American Indian nations","Colonies and regions","Branches of government"], answer:2,
+    why:"Colonies and regions — N.E., N.Y., N.J. and so on. On a cartoon, identify every label before you interpret anything. The labels are the artist telling you what the symbols mean." },
+  q:"What was Franklin's MAIN message in this cartoon?",
+  choices:["The colonies should break away from Britain immediately",
+           "The colonies must unite or they will be destroyed",
+           "Snakes were a threat to colonial farms",
+           "Each colony should govern itself separately"], answer:1,
+  why:"A snake cut apart dies; joined, it lives. 'JOIN, or DIE' states it outright. Note the date — 1754, during the French and Indian War, 22 years before independence — so 'break away from Britain immediately' is far too early. Dates on cartoons matter." },
+
+{ id:"p2", concept:"cartoon",
+  stim:{ kind:"cartoon", title:"'The Great Compromise'",
+    describe:"Two men pull opposite ends of a rope labeled REPRESENTATION. The man on the left is labeled LARGE STATES, the one on the right SMALL STATES. Between them a figure labeled CONVENTION holds up a document reading TWO HOUSES.",
+    symbols:[ ["Tug-of-war rope","The fight over how states are represented"],
+              ["LARGE STATES","Wanted representation based on population"],
+              ["SMALL STATES","Wanted every state represented equally"],
+              ["'TWO HOUSES' document","The compromise: a House by population, a Senate by equality"] ] },
+  probe:{ q:"First: what is written on the rope the two sides are pulling?",
+    choices:["TAXES","REPRESENTATION","SLAVERY","TRADE"], answer:1,
+    why:"REPRESENTATION. The labeled object in the middle of a cartoon is almost always the subject of the dispute — find it first." },
+  q:"The cartoon BEST illustrates which issue at the Constitutional Convention?",
+  choices:["Whether to allow slavery in new states","Whether to have a president",
+           "How states would be represented in Congress","How to pay off war debts"], answer:2,
+  why:"Large vs. small states pulling on 'REPRESENTATION,' resolved by two houses — that's the Great Compromise. Every label in the cartoon points at Congress, not at the other issues." },
+
+// ============================================================
+// TRAP QUESTIONS — the question word is the trick
+// ============================================================
+
+{ id:"x1", concept:"trap",
+  stim:{ kind:"table", title:"Effects of the Columbian Exchange",
+    head:["To the Americas","To Europe, Africa, Asia"],
+    rows:[ ["Horses, cattle, pigs","Corn (maize)"], ["Wheat, sugar, coffee","Potatoes"],
+           ["Smallpox, measles","Tomatoes, cacao"], ["Enslaved Africans","Tobacco"] ] },
+  probe:{ q:"First: what is the EXACT question word you need to watch in the question below?",
+    choices:["BEST","EXCEPT","MAIN","MOST"], answer:1,
+    why:"EXCEPT — meaning you're hunting for the ONE choice that is FALSE. Three choices will be true. Circle that word on a real test before you read a single answer." },
+  q:"All of the following came to the Americas through the Columbian Exchange EXCEPT —",
+  choices:["horses","smallpox","wheat","potatoes"], answer:3,
+  why:"Potatoes went FROM the Americas TO Europe — it's in the right-hand column. The other three are in the left column. On an EXCEPT question the three 'right-looking' answers are the wrong ones; slow down and flip your thinking." },
+
+{ id:"x2", concept:"trap",
+  stim:{ kind:"timeline", title:"Reconstruction Amendments",
+    rows:[ ["1865","13th Amendment — abolished slavery"],
+           ["1868","14th Amendment — citizenship and equal protection"],
+           ["1870","15th Amendment — voting cannot be denied by race"] ] },
+  probe:{ q:"First: which amendment on this timeline deals specifically with VOTING?",
+    choices:["13th","14th","15th","All three"], answer:2,
+    why:"The 15th, 1870. When three similar items are listed, pin down which one the question is about before you read the choices — that's where these get missed." },
+  q:"Which amendment was MAINLY intended to make formerly enslaved people citizens?",
+  choices:["13th Amendment","15th Amendment","16th Amendment","14th Amendment"], answer:3,
+  why:"The 14th — citizenship and equal protection. The 13th freed people but didn't make them citizens; the 15th addressed voting. 'MAINLY' means match the single best purpose, and the timeline gives you each one's purpose in its own words." },
+
+{ id:"x3", concept:"trap",
+  stim:{ kind:"quote", title:"Northwest Ordinance, 1787", source:"Confederation Congress",
+    text:"There shall be neither slavery nor involuntary servitude in the said territory... Religion, morality, and knowledge being necessary to good government and the happiness of mankind, schools and the means of education shall forever be encouraged." },
+  probe:{ q:"First: name the TWO separate things this passage establishes.",
+    choices:["Taxes and trade","An army and a navy","Voting rules and court rules",
+             "A ban on slavery and support for education"], answer:3,
+    why:"A ban on slavery in the territory, and encouragement of schools. When a passage does two things, the question usually targets just one — know both so you can tell which." },
+  q:"Which statement about the Northwest Ordinance is NOT supported by the passage?",
+  choices:["It banned slavery in the territory","It encouraged public education",
+           "It gave women the right to vote","It linked education to good government"], answer:2,
+  why:"Voting isn't mentioned at all. 'NOT supported' means find the choice the text doesn't back — and a choice can be historically false OR just absent. Absent counts. Don't go looking for it in your memory; look in the passage." },
+
+{ id:"x4", concept:"trap",
+  stim:{ kind:"bars", title:"Resources of the North and South, 1861",
+    unit:"share of U.S. total (percent)",
+    rows:[ ["North: factories","90",90], ["North: population","71",71],
+           ["South: factories","10",10], ["South: population","29",29] ], max:100 },
+  probe:{ q:"First: what UNIT is this graph using?",
+    choices:["Raw counts","Percent of the U.S. total","Dollars","Years"], answer:1,
+    why:"Percent of the U.S. total — so North and South pairs add to 100. Misreading percent as a raw count is one of the most common graph mistakes there is." },
+  q:"Which was the Union's GREATEST advantage according to the graph?",
+  choices:["Its share of factories","Its share of population",
+           "Its military leadership","Its farmland"], answer:0,
+  why:"Factories at 90% versus 10% is a 9-to-1 edge; population at 71% to 29% is about 2.4-to-1. Both are advantages, but the question says GREATEST — so compare the gaps, don't just find something that's true. Leadership and farmland aren't on the graph at all." }
+
+];
+
+</script>
+<script>
+(function(){
+  "use strict";
+  var KEY = "max_stimulus_trainer_v1";
+  var S = load();
+
+  function load(){
+    try {
+      var r = JSON.parse(localStorage.getItem(KEY));
+      if (r && r.st) return r;
+    } catch(e){}
+    return { st:{}, recent:[], probeRight:0, probeTotal:0 };
+  }
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+  function rec(id){
+    if (!S.st[id]) S.st[id] = { seen:0, right:0, streak:0, lastWrong:false };
+    return S.st[id];
+  }
+
+  // ---------- adaptive pick ----------
+  function weight(q){
+    var r = S.st[q.id];
+    if (!r || !r.seen) return 100;
+    var w = 10;
+    if (r.lastWrong) w += 55;
+    var c = conceptPct(q.concept);
+    if (c !== null && c < 70) w += 28;
+    if (r.streak >= 3) w = 2;
+    return w;
+  }
+  function pick(){
+    var pool = QUESTIONS.filter(function(q){ return S.recent.indexOf(q.id) === -1; });
+    if (!pool.length) pool = QUESTIONS.slice();
+    var tot = 0, i;
+    for (i=0;i<pool.length;i++) tot += weight(pool[i]);
+    var roll = Math.random() * tot;
+    for (i=0;i<pool.length;i++){
+      roll -= weight(pool[i]);
+      if (roll <= 0) return pool[i];
+    }
+    return pool[pool.length-1];
+  }
+  function conceptPct(c){
+    var seen=0, right=0;
+    QUESTIONS.forEach(function(q){
+      if (q.concept !== c) return;
+      var r = S.st[q.id];
+      if (r && r.seen){ seen += r.seen; right += r.right; }
+    });
+    return seen ? Math.round(right/seen*100) : null;
+  }
+
+  // ---------- stimulus rendering ----------
+  function esc(s){
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+  function renderStim(s){
+    var h = '<div class="stim"><div class="stim-t">' + esc(s.title) + '</div>';
+    if (s.kind === "timeline"){
+      h += '<table class="tl">';
+      s.rows.forEach(function(r){
+        h += '<tr><td class="yr">' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td></tr>';
+      });
+      h += '</table>';
+    } else if (s.kind === "table"){
+      h += '<table class="gt"><tr>';
+      s.head.forEach(function(x){ h += '<th>' + esc(x) + '</th>'; });
+      h += '</tr>';
+      s.rows.forEach(function(r){
+        h += '<tr>';
+        r.forEach(function(c){ h += '<td>' + esc(c) + '</td>'; });
+        h += '</tr>';
+      });
+      h += '</table>';
+    } else if (s.kind === "bars"){
+      h += '<div class="unit">' + esc(s.unit) + '</div>';
+      s.rows.forEach(function(r){
+        var pct = Math.max(2, Math.round(r[2] / s.max * 100));
+        h += '<div class="bar-row"><div class="bar-lab"><span>' + esc(r[0]) +
+             '</span><b>' + esc(r[1]) + '</b></div>' +
+             '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%"></div></div></div>';
+      });
+    } else if (s.kind === "quote"){
+      h += '<div class="qt">&ldquo;' + esc(s.text) + '&rdquo;</div>' +
+           '<div class="qt-src">&mdash; ' + esc(s.source) + '</div>';
+    } else if (s.kind === "map"){
+      s.legend.forEach(function(l){
+        h += '<div class="leg"><span class="sw" style="background:' + esc(l[0]) + '"></span><span>' +
+             esc(l[1]) + '</span></div>';
+      });
+      if (s.note) h += '<div class="stim-note">' + esc(s.note) + '</div>';
+    } else if (s.kind === "cartoon"){
+      h += '<div class="cart-d">' + esc(s.describe) + '</div><div class="cart-s">';
+      s.symbols.forEach(function(x){
+        h += '<div class="leg"><span>&bull;</span><span><b>' + esc(x[0]) + '</b> &mdash; ' +
+             esc(x[1]) + '</span></div>';
+      });
+      h += '</div>';
+    }
+    return h + '</div>';
+  }
+
+  // ---------- practice view ----------
+  var cur = null, phase = "probe", probeOK = true;
+
+  function newQ(){
+    cur = pick();
+    phase = "probe";
+    probeOK = true;
+    drawPractice();
+  }
+
+  function drawPractice(){
+    if (!cur) { newQ(); return; }
+    var q = cur, C = CONCEPTS[q.concept];
+    var done = 0, rightN = 0;
+    Object.keys(S.st).forEach(function(k){ done += S.st[k].seen; rightN += S.st[k].right; });
+    var pp = S.probeTotal ? Math.round(S.probeRight/S.probeTotal*100) : null;
+
+    var h = '<div class="meta"><span>' + done + ' answered' +
+      (done ? ' &middot; ' + Math.round(rightN/done*100) + '% right' : '') + '</span>' +
+      '<span>' + (pp===null ? 'source step &mdash;' : 'source step ' + pp + '%') + '</span></div>';
+
+    h += '<div class="card"><span class="ctag">' + esc(C.name) + '</span>';
+    h += renderStim(q.stim);
+
+    if (phase === "probe"){
+      h += '<div class="step">Step 1 &mdash; read the source</div>';
+      h += '<div class="q">' + esc(q.probe.q) + '</div>';
+      h += opts(q.probe.choices, "p");
+    } else {
+      // show the probe result, then the real question
+      h += '<div class="step">Step 1 &mdash; read the source</div>';
+      h += '<div class="q" style="opacity:.6;font-size:14.5px">' + esc(q.probe.q) + '</div>';
+      h += '<div class="fb ' + (probeOK ? 'ok' : 'no') + '"><b>' +
+           (probeOK ? 'Good' : 'Not quite') + '</b>' + esc(q.probe.why) + '</div>';
+      h += '<div class="step" style="margin-top:18px">Step 2 &mdash; now the question</div>';
+      h += '<div class="q">' + esc(q.q) + '</div>';
+      if (phase === "main") h += opts(q.choices, "m");
+      else {
+        h += opts(q.choices, "m");
+        h += '<div class="fb ' + (lastRight ? 'ok' : 'no') + '"><b>' +
+             (lastRight ? 'Correct' : 'Incorrect') + '</b>' + esc(q.why) + '</div>';
+        h += '<button class="btn" id="next">Next question</button>';
+      }
+    }
+    h += '</div>';
+    document.getElementById("view").innerHTML = h;
+
+    if (phase === "probe") bind("p", onProbe);
+    else if (phase === "main") bind("m", onMain);
+    else {
+      mark("m", cur.answer, lastPick);
+      document.getElementById("next").onclick = newQ;
+    }
+  }
+
+  function opts(list, tag){
+    var L = "ABCD".split(""), h = "";
+    list.forEach(function(t,i){
+      h += '<div class="opt" data-' + tag + '="' + i + '"><span class="ltr">' + L[i] +
+           '</span><span>' + esc(t) + '</span></div>';
+    });
+    return h;
+  }
+  function bind(tag, fn){
+    var n = document.querySelectorAll('[data-' + tag + ']');
+    Array.prototype.forEach.call(n, function(el){
+      el.onclick = function(){ fn(parseInt(el.getAttribute('data-' + tag), 10)); };
+    });
+  }
+  function mark(tag, correct, chosen){
+    var n = document.querySelectorAll('[data-' + tag + ']');
+    Array.prototype.forEach.call(n, function(el){
+      var i = parseInt(el.getAttribute('data-' + tag), 10);
+      el.className = 'opt lock' + (i === correct ? ' right' : (i === chosen ? ' wrong' : ''));
+      el.onclick = null;
+    });
+  }
+
+  var lastRight = false, lastPick = -1;
+
+  function onProbe(i){
+    probeOK = (i === cur.probe.answer);
+    S.probeTotal++;
+    if (probeOK) S.probeRight++;
+    save();
+    mark("p", cur.probe.answer, i);
+    phase = "main";
+    setTimeout(drawPractice, 520);
+  }
+
+  function onMain(i){
+    lastPick = i;
+    lastRight = (i === cur.answer);
+    var r = rec(cur.id);
+    r.seen++;
+    if (lastRight){ r.right++; r.streak++; r.lastWrong = false; }
+    else { r.streak = 0; r.lastWrong = true; }
+    S.recent.push(cur.id);
+    if (S.recent.length > 6) S.recent.shift();
+    save();
+    phase = "done";
+    drawPractice();
+  }
+
+  // ---------- mastery ----------
+  function drawMastery(){
+    var h = "", weak = [];
+    Object.keys(CONCEPTS).forEach(function(c){
+      var p = conceptPct(c);
+      if (p !== null && p < 70) weak.push(CONCEPTS[c].name);
+    });
+    var pp = S.probeTotal ? Math.round(S.probeRight/S.probeTotal*100) : null;
+
+    if (pp !== null){
+      h += '<div class="banner"><b>Source step: ' + pp + '%</b> &mdash; ' +
+        (pp >= 85 ? 'this is the number that matters, and it looks good. Reading first is becoming automatic.'
+         : pp >= 60 ? 'getting there. When you miss step 1, you are still jumping ahead &mdash; slow down and find the answer in the source.'
+         : 'this is the one to fix. Step 1 just asks what the source says. Point at it with your finger before you pick.') +
+        '</div>';
+    }
+    if (weak.length) h += '<div class="banner">Focus here first: <b>' + esc(weak.join(", ")) + '</b></div>';
+
+    h += '<div class="card">';
+    Object.keys(CONCEPTS).forEach(function(c){
+      var p = conceptPct(c), C = CONCEPTS[c];
+      var col = p === null ? 'var(--line)' : p >= 80 ? 'var(--good)' : p >= 60 ? 'var(--warn)' : 'var(--bad)';
+      h += '<div class="mrow"><div class="mlab"><b>' + esc(C.name) + '</b><span>' +
+           (p === null ? 'not started' : p + '%') + '</span></div>' +
+           '<div class="mtrack"><div class="mfill" style="width:' + (p||0) +
+           '%;background:' + col + '"></div></div>' +
+           '<div class="mblurb">' + esc(C.blurb) + '</div></div>';
+    });
+    h += '</div><button class="btn ghost" id="reset">Reset progress</button>';
+    document.getElementById("view").innerHTML = h;
+    document.getElementById("reset").onclick = function(){
+      if (confirm("Erase all progress on this device?")){
+        S = { st:{}, recent:[], probeRight:0, probeTotal:0 };
+        save(); drawMastery();
+      }
+    };
+  }
+
+  // ---------- the method ----------
+  function drawHabit(){
+    document.getElementById("view").innerHTML =
+      '<div class="card hab">' +
+      '<h3>The four-step method</h3><ol>' +
+      '<li><b>Cover the answers.</b> Literally put your hand or your paper over them. You cannot be tricked by a choice you have not read yet.</li>' +
+      '<li><b>Read the source and say what it shows.</b> Out loud or in your head, in one sentence. A timeline shows a span. A graph shows a direction. A quote has a speaker with a position.</li>' +
+      '<li><b>Read the question and circle the question word.</b> <span class="kw">MOST, BEST, MAIN, EXCEPT, NOT</span> &mdash; these flip what you are hunting for. EXCEPT means three answers are true and you want the false one.</li>' +
+      '<li><b>Answer it yourself, then find the match.</b> Decide your answer before you look. Then pick the choice closest to it.</li>' +
+      '</ol>' +
+      '<h3>What to do with each source type</h3><ol>' +
+      '<li><b>Timeline</b> &mdash; count the entries and note the first and last date. If the question says &ldquo;most,&rdquo; you need a number to compare against.</li>' +
+      '<li><b>Chart or table</b> &mdash; find the row and the column the question asks about before reading choices. Most chart misses are reading the wrong column.</li>' +
+      '<li><b>Graph</b> &mdash; read the axis label and the unit first. Percent and raw count are different questions.</li>' +
+      '<li><b>Quote</b> &mdash; who is speaking, and what is their position? Then find the exact phrase the question hinges on.</li>' +
+      '<li><b>Map</b> &mdash; read the legend and any note before looking at the map. The legend is often a timeline in disguise.</li>' +
+      '<li><b>Cartoon</b> &mdash; name every label and symbol, then ask what the artist thinks. Check the date too.</li>' +
+      '</ol>' +
+      '<h3>Two rules that catch most mistakes</h3><ol>' +
+      '<li>If a choice <b>contradicts the source</b> sitting in front of you, it is wrong no matter how familiar it sounds.</li>' +
+      '<li>Absolute words &mdash; <span class="kw">all, none, no, only, always</span> &mdash; are usually wrong, because one exception kills them.</li>' +
+      '</ol></div>';
+  }
+
+  // ---------- tabs ----------
+  var views = { practice: function(){ if (!cur) newQ(); else drawPractice(); },
+                mastery: drawMastery, habit: drawHabit };
+  Array.prototype.forEach.call(document.querySelectorAll(".tab"), function(t){
+    t.onclick = function(){
+      Array.prototype.forEach.call(document.querySelectorAll(".tab"), function(x){
+        x.className = "tab";
+      });
+      t.className = "tab on";
+      views[t.getAttribute("data-v")]();
+    };
+  });
+
+  newQ();
+})();
+</script>
+</body>
+</html>
