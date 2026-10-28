@@ -316,6 +316,9 @@ footer a{color:#E8A68E}
 
     <div class="form-card" id="card">
       <form id="bookform">
+        <!-- Formspree: _replyto drives the reply address and the autoresponder. -->
+        <input type="hidden" name="_replyto" id="_replyto">
+        <input type="hidden" name="_subject" value="New tailgate booking request">
         <div class="frow">
           <div class="fld">
             <label for="name">Your name</label>
@@ -425,20 +428,64 @@ document.querySelectorAll('[data-tier]').forEach(function(b){
   });
 });
 
-// Demo submit: no backend, so confirm in place rather than losing the entry.
-document.getElementById('bookform').addEventListener('submit', function(e){
-  e.preventDefault();
+/* ===================================================================
+   BOOKING FORM — paste the Formspree endpoint between the quotes.
+   Get it free at formspree.io: New Form → copy the URL it shows,
+   which looks like  https://formspree.io/f/abcdwxyz
+   Until it is filled in, the form still confirms on screen (demo mode).
+   =================================================================== */
+var FORM_ENDPOINT = "";
+/* =================================================================== */
+
+var bookform = document.getElementById('bookform');
+var submitBtn = bookform.querySelector('button[type="submit"]');
+
+// Friendly recap line shown on the confirmation card.
+function recap(){
   var name = document.getElementById('name').value.trim().split(' ')[0];
   var tier = document.getElementById('tier').value;
   var game = document.getElementById('game').value;
   // Strip the price and a leading "The" so the sentence reads naturally.
   var pkg = tier.replace(/ — .*/,'').replace(/^The /,'');
-  document.getElementById('confirm-msg').textContent =
-    (name ? name + ', your ' : 'Your ') + pkg +
-    ' package for ' + game + ' is requested. We will confirm by email within 24 hours.';
+  return (name ? name + ', your ' : 'Your ') + pkg +
+         ' package for ' + game + ' is requested. We will confirm by email within 24 hours.';
+}
+
+function showConfirm(){
+  document.getElementById('confirm-msg').textContent = recap();
   document.getElementById('card').style.display = 'none';
   document.getElementById('confirm').style.display = 'block';
   document.getElementById('confirm').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+bookform.addEventListener('submit', function(e){
+  e.preventDefault();
+
+  // Mirror the visitor's address so Formspree can reply and autorespond to it.
+  document.getElementById('_replyto').value = document.getElementById('email').value;
+
+  // No endpoint configured yet — behave as a demo and confirm in place.
+  if (!FORM_ENDPOINT) { showConfirm(); return; }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending…';
+
+  fetch(FORM_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Accept': 'application/json' },
+    body: new FormData(bookform)
+  }).then(function(res){
+    if (res.ok) { showConfirm(); return; }
+    throw new Error('Submission rejected');
+  }).catch(function(){
+    // Never strand the visitor: show the email fallback instead of a dead end.
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Request this tailgate';
+    var note = document.querySelector('.form-note');
+    note.innerHTML = 'That did not go through. Please email us directly and we will get you booked.';
+    note.style.color = '#B54A2E';
+    note.style.fontWeight = '600';
+  });
 });
 </script>
 
