@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tailgate in a Box — Spartanburg, SC</title>
+<meta name="description" content="The tailgate shows up fully built. You just show up. Game-day tailgate rentals delivered and set up at Gibbs Stadium, Wofford College.">
+<style>
+:root{
+  --accent:#B54A2E;
+  --accent-dk:#8E3721;
+  --ink:#22332B;
+  --body:#3A3A3A;
+  --paper:#F5F1EC;
+  --white:#fff;
+  --line:#E2DAD1;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  color:var(--body);background:var(--paper);line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+h1,h2,h3{color:var(--ink);line-height:1.15;letter-spacing:-.02em}
+a{color:var(--accent)}
+
+/* nav */
+nav{
+  position:sticky;top:0;z-index:50;background:rgba(245,241,236,.93);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-weight:800;color:var(--ink);font-size:17px;letter-spacing:-.02em;text-decoration:none}
+.logo span{color:var(--accent)}
+.navlinks{display:flex;gap:28px;align-items:center}
+.navlinks a{color:var(--body);text-decoration:none;font-size:14.5px;font-weight:500}
+.navlinks a:hover{color:var(--accent)}
+.btn{
+  display:inline-block;background:var(--accent);color:#fff!important;text-decoration:none;
+  padding:12px 24px;border-radius:6px;font-weight:650;font-size:15px;border:none;cursor:pointer;
+  transition:background .15s;
+}
+.btn:hover{background:var(--accent-dk)}
+.btn.sm{padding:9px 18px;font-size:14px}
+.btn.ghost{background:transparent;color:var(--ink)!important;border:1.5px solid var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:#fff!important}
+@media(max-width:760px){.navlinks a:not(.btn){display:none}}
+
+/* hero */
+header{padding:84px 0 72px;text-align:center}
+.eyebrow{
+  font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:22px;
+}
+header h1{font-size:62px;font-weight:800;margin-bottom:20px}
+header .sub{font-size:21px;max-width:620px;margin:0 auto 14px;color:var(--body)}
+header .sub strong{color:var(--ink)}
+.loc{font-size:15px;color:#7A7268;margin-bottom:34px}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+@media(max-width:700px){header h1{font-size:40px}header .sub{font-size:18px}}
+
+/* how */
+.band{background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+section{padding:72px 0}
+.sec-head{text-align:center;margin-bottom:48px}
+.sec-head h2{font-size:36px;font-weight:800;margin-bottom:12px}
+.sec-head p{font-size:17px;max-width:560px;margin:0 auto}
+@media(max-width:700px){.sec-head h2{font-size:28px}}
+
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:36px}
+.step{text-align:center}
+.step .n{
+  width:46px;height:46px;border-radius:50%;background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;
+  margin:0 auto 18px;
+}
+.step h3{font-size:19px;margin-bottom:8px}
+.step p{font-size:15.5px}
+@media(max-width:760px){.steps{grid-template-columns:1fr;gap:30px}}
+
+/* pricing */
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:start}
+.tier{
+  background:var(--white);border:1.5px solid var(--line);border-radius:12px;
+  padding:32px 26px;display:flex;flex-direction:column;height:100%;
+}
+.tier.feat{border-color:var(--accent);border-width:2.5px;box-shadow:0 10px 30px rgba(181,74,46,.13)}
+.tier .tag{
+  display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;margin-bottom:14px;
+  align-self:flex-start;
+}
+.tier .tname{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.tier .price{font-size:46px;font-weight:800;color:var(--ink);line-height:1;margin-bottom:4px}
+.tier .per{font-size:14px;color:#7A7268;margin-bottom:22px}
+.tier ul{list-style:none;margin-bottom:26px;flex-grow:1}
+.tier li{font-size:15.5px;padding:7px 0 7px 26px;position:relative}
+.tier li:before{
+  content:"";position:absolute;left:0;top:14px;width:13px;height:7px;
+  border-left:2.5px solid var(--accent);border-bottom:2.5px solid var(--accent);
+  transform:rotate(-45deg);
+}
+.tier .who{font-size:13.5px;color:#7A7268;font-style:italic;margin-bottom:22px;border-top:1px solid var(--line);padding-top:16px}
+@media(max-width:860px){.tiers{grid-template-columns:1fr;max-width:420px;margin:0 auto}}
+
+/* problem */
+.probs{display:grid;grid-template-columns:repeat(2,1fr);gap:30px 44px}
+.prob h3{font-size:18px;margin-bottom:6px;display:flex;align-items:baseline;gap:10px}
+.prob h3 b{color:var(--accent);font-size:15px}
+.prob p{font-size:15.5px}
+@media(max-width:760px){.probs{grid-template-columns:1fr;gap:26px}}
+
+/* quote strip */
+.strip{background:var(--ink);color:#fff;text-align:center;padding:64px 0}
+.strip h2{color:#fff;font-size:34px;font-weight:800;max-width:760px;margin:0 auto 14px}
+.strip p{color:#C9D3CC;font-size:17px;max-width:600px;margin:0 auto}
+@media(max-width:700px){.strip h2{font-size:25px}}
+
+/* booking form */
+.form-card{
+  background:var(--white);border:1.5px solid var(--line);border-radius:12px;
+  padding:38px;max-width:680px;margin:0 auto;
+}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+.fld{display:flex;flex-direction:column}
+.fld.full{grid-column:1/-1}
+label{font-size:13.5px;font-weight:650;color:var(--ink);margin-bottom:6px}
+input,select,textarea{
+  font-family:inherit;font-size:15.5px;color:var(--body);padding:11px 13px;
+  border:1.5px solid var(--line);border-radius:6px;background:var(--paper);
+}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);background:#fff}
+textarea{resize:vertical;min-height:84px}
+.form-note{font-size:13.5px;color:#7A7268;margin-top:16px;text-align:center}
+#confirm{
+  display:none;background:#EDF4EF;border:1.5px solid #9DBFA9;border-radius:10px;
+  padding:26px;text-align:center;
+}
+#confirm h3{color:#2E5C3E;font-size:20px;margin-bottom:8px}
+#confirm p{font-size:15.5px}
+@media(max-width:620px){.frow{grid-template-columns:1fr}.form-card{padding:26px}}
+
+/* faq */
+.faq{max-width:740px;margin:0 auto}
+details{border-bottom:1px solid var(--line);padding:18px 0}
+summary{
+  font-weight:650;font-size:17px;color:var(--ink);cursor:pointer;list-style:none;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"+";color:var(--accent);font-size:24px;font-weight:400;line-height:1}
+details[open] summary:after{content:"\2013"}
+details p{margin-top:12px;font-size:15.5px}
+
+footer{background:var(--ink);color:#A8B5AC;padding:44px 0;text-align:center;font-size:14px}
+footer .logo{color:#fff;font-size:18px;display:block;margin-bottom:10px}
+footer a{color:#E8A68E}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="#" class="logo">Tailgate <span>in a Box</span></a>
+    <div class="navlinks">
+      <a href="#how">How it works</a>
+      <a href="#pricing">Packages</a>
+      <a href="#faq">FAQ</a>
+      <a href="#book" class="btn sm">Book a tailgate</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow">Gibbs Stadium · Wofford College</p>
+    <h1>The tailgate shows&nbsp;up<br>fully built.</h1>
+    <p class="sub"><strong>You just show up.</strong> We deliver the tent, table, chairs, cooler and games to your spot on Saturday morning — and haul it all away after the game.</p>
+    <p class="loc">Spartanburg, SC · All five Wofford home games</p>
+    <div class="cta-row">
+      <a href="#book" class="btn">Book a tailgate</a>
+      <a href="#pricing" class="btn ghost">See packages</a>
+    </div>
+  </div>
+</header>
+
+<div class="band">
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Three steps. Zero storage.</h2>
+      <p>No tent to buy, no trunk to load, no teardown in the dark.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="n">1</div>
+        <h3>Book by Thursday</h3>
+        <p>Pick your package and your spot. Takes about two minutes.</p>
+      </div>
+      <div class="step">
+        <div class="n">2</div>
+        <h3>We set up Saturday</h3>
+        <p>Everything is standing and ready before you walk up. Ice already in the cooler.</p>
+      </div>
+      <div class="step">
+        <div class="n">3</div>
+        <h3>We haul it away</h3>
+        <p>Leave when the game ends. We come back for all of it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Why nobody owns this stuff</h2>
+      <p>A full tailgate setup runs about $600 — to use five times a year.</p>
+    </div>
+    <div class="probs">
+      <div class="prob">
+        <h3><b>01</b> It is expensive up front</h3>
+        <p>Tent, table, chairs, cooler, cornhole, speaker, flags. About $600 before you have bought a single hot dog.</p>
+      </div>
+      <div class="prob">
+        <h3><b>02</b> There is nowhere to put it</h3>
+        <p>A 10x10 canopy does not fit under a twin XL bed. Dorm storage is not a thing.</p>
+      </div>
+      <div class="prob">
+        <h3><b>03</b> It sits unused 360 days</h3>
+        <p>Wofford plays five home games. The rest of the year it is in somebody's parents' garage.</p>
+      </div>
+      <div class="prob">
+        <h3><b>04</b> Setup eats the day</h3>
+        <p>Two hours of labor wrapped around the three hours you actually wanted.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="band">
+<section id="pricing">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Pick your package</h2>
+      <p>Delivered, set up, and picked up. Prices are per game.</p>
+    </div>
+    <div class="tiers">
+
+      <div class="tier">
+        <div class="tname">The Basic</div>
+        <div class="price">$149</div>
+        <div class="per">per game</div>
+        <ul>
+          <li>10x10 team canopy</li>
+          <li>6 ft table + 4 chairs</li>
+          <li>Cooler packed with ice</li>
+          <li>Delivery &amp; pickup</li>
+        </ul>
+        <div class="who">Best for students splitting it six ways</div>
+        <a href="#book" class="btn ghost" data-tier="The Basic — $149">Choose Basic</a>
+      </div>
+
+      <div class="tier feat">
+        <span class="tag">Most popular</span>
+        <div class="tname">The Terrier</div>
+        <div class="price">$249</div>
+        <div class="per">per game</div>
+        <ul>
+          <li>Everything in Basic</li>
+          <li>Cornhole + yard games</li>
+          <li>Bluetooth speaker</li>
+          <li>Team flags &amp; decor</li>
+          <li>Setup done before you arrive</li>
+        </ul>
+        <div class="who">Best for parents, alumni, and most groups</div>
+        <a href="#book" class="btn" data-tier="The Terrier — $249">Choose Terrier</a>
+      </div>
+
+      <div class="tier">
+        <div class="tname">The Black &amp; Gold</div>
+        <div class="price">$399</div>
+        <div class="per">per game</div>
+        <ul>
+          <li>Everything in Terrier</li>
+          <li>20x20 canopy, 10 chairs</li>
+          <li>TV + generator</li>
+          <li>Catering coordination</li>
+          <li>On-call attendant</li>
+        </ul>
+        <div class="who">Best for big groups and corporate tailgates</div>
+        <a href="#book" class="btn ghost" data-tier="The Black &amp; Gold — $399">Choose Black &amp; Gold</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="strip">
+  <div class="wrap">
+    <h2>Buying the gear costs $600. Renting it costs $149.</h2>
+    <p>And you never have to store it, load it, or set it up.</p>
+  </div>
+</div>
+
+<section id="book">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Book your tailgate</h2>
+      <p>Reserve by Thursday for a Saturday home game.</p>
+    </div>
+
+    <div class="form-card" id="card">
+      <form id="bookform">
+        <div class="frow">
+          <div class="fld">
+            <label for="name">Your name</label>
+            <input id="name" name="name" type="text" required placeholder="First and last">
+          </div>
+          <div class="fld">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required placeholder="you@email.com">
+          </div>
+          <div class="fld">
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" type="tel" placeholder="(864) 555-0100">
+          </div>
+          <div class="fld">
+            <label for="group">Group size</label>
+            <input id="group" name="group" type="number" min="1" placeholder="How many people?">
+          </div>
+          <div class="fld">
+            <label for="game">Which game</label>
+            <select id="game" name="game">
+              <option>ETSU — Sat Nov 14</option>
+              <option>The Citadel</option>
+              <option>Gardner-Webb</option>
+              <option>Tennessee Tech</option>
+              <option>VMI</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+          <div class="fld">
+            <label for="tier">Package</label>
+            <select id="tier" name="tier">
+              <option>The Basic — $149</option>
+              <option selected>The Terrier — $249</option>
+              <option>The Black &amp; Gold — $399</option>
+              <option>Help me pick</option>
+            </select>
+          </div>
+          <div class="fld full">
+            <label for="notes">Anything else? (tailgate spot, setup time, special requests)</label>
+            <textarea id="notes" name="notes" placeholder="Lot 3 near the practice field, set up by 10am…"></textarea>
+          </div>
+        </div>
+        <button type="submit" class="btn" style="width:100%">Request this tailgate</button>
+        <p class="form-note">No payment now. We confirm your spot by email within 24 hours.</p>
+      </form>
+    </div>
+
+    <div class="form-card" id="confirm">
+      <h3>Request received.</h3>
+      <p id="confirm-msg">Thanks — we'll confirm your tailgate by email within 24 hours.</p>
+    </div>
+  </div>
+</section>
+
+<div class="band">
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head"><h2>Questions</h2></div>
+    <div class="faq">
+      <details open>
+        <summary>When do I need to book?</summary>
+        <p>By Thursday night for that Saturday's game. Earlier is better for Homecoming and Parents' Weekend — we only have twelve kits.</p>
+      </details>
+      <details>
+        <summary>Do I have to be there for setup?</summary>
+        <p>No. That is the whole point. Tell us your spot and we have it standing before you arrive.</p>
+      </details>
+      <details>
+        <summary>What if it rains?</summary>
+        <p>The canopy handles normal rain. If the game is cancelled outright, you get a full refund or we move your booking to another home game.</p>
+      </details>
+      <details>
+        <summary>Can we book the whole season?</summary>
+        <p>Yes — Greek chapters and clubs can reserve a kit for all five home games at a discount. Mention it in the booking notes.</p>
+      </details>
+      <details>
+        <summary>Is food included?</summary>
+        <p>Not in Basic or Terrier — you bring the food, we bring everything else. The Black &amp; Gold package includes catering coordination.</p>
+      </details>
+      <details>
+        <summary>What happens if something breaks?</summary>
+        <p>Normal wear is on us. We only charge for gear that comes back damaged beyond use, and we will always tell you before charging anything.</p>
+      </details>
+    </div>
+  </div>
+</section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span class="logo">Tailgate in a Box</span>
+    <p>Spartanburg, SC · Serving Gibbs Stadium and Wofford College</p>
+    <p style="margin-top:8px"><a href="#book">Book a tailgate</a> · hello@tailgateinabox.com</p>
+    <p style="margin-top:18px;font-size:12.5px;opacity:.65">A student venture by Ella Bumgardner · BUS 347 Entrepreneurship, Wofford College</p>
+  </div>
+</footer>
+
+<script>
+// Tier buttons preselect the package, then jump to the form.
+document.querySelectorAll('[data-tier]').forEach(function(b){
+  b.addEventListener('click', function(){
+    var want = this.getAttribute('data-tier').replace('&amp;','&');
+    var sel = document.getElementById('tier');
+    for (var i=0;i<sel.options.length;i++){
+      if (sel.options[i].text.replace('&amp;','&') === want) { sel.selectedIndex = i; }
+    }
+  });
+});
+
+// Demo submit: no backend, so confirm in place rather than losing the entry.
+document.getElementById('bookform').addEventListener('submit', function(e){
+  e.preventDefault();
+  var name = document.getElementById('name').value.trim().split(' ')[0];
+  var tier = document.getElementById('tier').value;
+  var game = document.getElementById('game').value;
+  // Strip the price and a leading "The" so the sentence reads naturally.
+  var pkg = tier.replace(/ — .*/,'').replace(/^The /,'');
+  document.getElementById('confirm-msg').textContent =
+    (name ? name + ', your ' : 'Your ') + pkg +
+    ' package for ' + game + ' is requested. We will confirm by email within 24 hours.';
+  document.getElementById('card').style.display = 'none';
+  document.getElementById('confirm').style.display = 'block';
+  document.getElementById('confirm').scrollIntoView({behavior:'smooth', block:'center'});
+});
+</script>
+
+</body>
+</html>
